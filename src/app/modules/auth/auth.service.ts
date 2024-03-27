@@ -3,6 +3,7 @@ import config from "../../config";
 import { PrismaClient, User } from "@prisma/client";
 import jwt, { Secret } from "jsonwebtoken";
 import httpStatus from "http-status";
+import { AppError } from "../../errorHanler/appError.error";
 
 const prisma = new PrismaClient();
 //
@@ -50,17 +51,6 @@ const addUser = async (payload: {
 };
 // create user ends here
 
-class AppError extends Error {
-  constructor(public statusCode: number, message: string, stack: string = "") {
-    super(message);
-
-    if (stack) {
-      this.stack = stack;
-    } else {
-      Error.captureStackTrace(this, this.constructor);
-    }
-  }
-}
 // login user stars here
 const logIn = async (payload: { email: string; password: string }) => {
   const { email, password } = payload;

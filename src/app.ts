@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import { indexRoutes } from "./app/routes/routes";
-import { handleGlobalError } from "./app/errorHanler/globalError.error";
-import { handleNotFound } from "./app/errorHanler/notFound.error";
+import { handleGlobalError } from "./app/middleware/globalError.middleware";
+import { handleNotFound } from "./app/middleware/notFound.middleware";
 const app = express();
 
 //parse json object

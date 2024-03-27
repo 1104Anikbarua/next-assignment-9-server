@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import { authControllers } from "./auth.controller";
 import { authValidations } from "./auth.validation";
-import { validateRequest } from "../../utlis/validateRequest.utlis";
+import { validateRequest } from "../../middleware/validateRequest.middleware";
 
 const router = express.Router();
 
