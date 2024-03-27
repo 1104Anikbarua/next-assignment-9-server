@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// enum starts here
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// enum ends here
+
+// <-MODEL STARTS HERE->
+// User model starts here
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  trip        Trip[]
+  travelBuddy TravelBuddy[]
+
+  UserProfile UserProfile?
+
+  @@map("users")
+}
+
+// User model ends here
+// trip model starts here 
+model Trip {
+  id          String   @id @default(uuid())
+  userId      String
+  destination String
+  startDate   String
+  endDate     String
+  budget      Int
+  activities  String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user        User          @relation(fields: [userId], references: [id])
+  travelBuddy TravelBuddy[]
+
+  @@map("trips")
+}
+
+// trip model ends here 
+
+// model travel buddy starts here 
+model TravelBuddy {
+  id        String   @id @default(uuid())
+  tripId    String
+  userId    String
+  status    Status   @default(PENDING)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+  trip Trip @relation(fields: [tripId], references: [id])
+
+  @@map("travelBuddies")
+}
+
+// model travel buddy ends here
+
+// model user profile starts here 
+model UserProfile {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  bio       String
+  age       Int
+  createdAt DateTime
+  updatedAt DateTime
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("userProfiles")
+}
+
+// model user profile ends here 
+
+// <-MODEL ENDS HERE->
