@@ -1,5 +1,5 @@
 import httpStatus from "http-status";
-import jwt, { Secret } from "jsonwebtoken";
+import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import { handleAsyncTryCatch } from "../utlis/tryCatch.utlis";
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "../errorHanler/appError.error";
@@ -13,7 +13,13 @@ export const auth = () => {
       if (!token) {
         throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized access");
       }
-      const decoded = jwt.verify(token, config.jwt_access_secret as Secret);
+      let decoded;
+      try {
+        decoded = jwt.verify(token, config.jwt_access_secret as Secret);
+      } catch (error) {
+        next(error);
+      }
+      req.user = decoded as JwtPayload;
       next();
     }
   );

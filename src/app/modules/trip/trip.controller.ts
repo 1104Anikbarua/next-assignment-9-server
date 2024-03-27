@@ -5,8 +5,9 @@ import { tripServices } from "./trip.service";
 
 // createTrip starts here
 const createTrip = handleAsyncTryCatch(async (req, res) => {
+  const { id } = req.user;
   const payload = req.body;
-  const result = await tripServices.createTrip(payload);
+  const result = await tripServices.createTrip(id, payload);
   handleSendResposne(res, {
     success: true,
     statusCode: httpStatus.CREATED,
