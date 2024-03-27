@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import config from "../../config";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
+import jwt, { Secret } from "jsonwebtoken";
+import httpStatus from "http-status";
 
 const prisma = new PrismaClient();
 //
@@ -13,7 +15,7 @@ const addUser = async (payload: {
     bio: string;
     age: number;
   };
-}) => {
+}): Promise<Partial<User>> => {
   const { profile, ...user } = payload;
 
   // generate salt rounds
@@ -48,8 +50,46 @@ const addUser = async (payload: {
 };
 // create user ends here
 
+class AppError extends Error {
+  constructor(public statusCode: number, message: string, stack: string = "") {
+    super(message);
+
+    if (stack) {
+      this.stack = stack;
+    } else {
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+}
 // login user stars here
-const logIn = async () => {};
+const logIn = async (payload: { email: string; password: string }) => {
+  const { email, password } = payload;
+  // check is user exists in database
+  const isUserExists = await prisma.user.findUniqueOrThrow({
+    where: { email },
+  });
+
+  // if exists comparse password
+  const isPasswordMatched = await bcrypt.compare(
+    password,
+    isUserExists.password
+  );
+  // if password not matched throw custom app error
+  if (!isPasswordMatched) {
+    throw new AppError(
+      httpStatus.FORBIDDEN,
+      "Please check your email and password"
+    );
+  }
+  const { name, id } = isUserExists;
+  const jwtPayload = { id, name, email };
+
+  const token = jwt.sign(jwtPayload, config.jwt_access_secret as Secret, {
+    expiresIn: config.jwt_expires_in,
+  });
+
+  return { id, name, email, token };
+};
 // login user ends here
 // ||
 // ||

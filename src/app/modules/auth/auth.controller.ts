@@ -18,8 +18,19 @@ const addUser = handleAsyncTryCatch(async (req, res) => {
 });
 // create user ends here
 // login user starts here
-const login = async (req: Request, res: Response) => {};
-// login user starts here
+const login = handleAsyncTryCatch(async (req, res) => {
+  const payload = req.body;
+  const result = await authServices.logIn(payload);
+
+  //
+  handleSendResposne(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User logged in successfully",
+    data: result,
+  });
+});
+// login user ends here
 // export auth controller function starts here
 export const authControllers = {
   addUser,

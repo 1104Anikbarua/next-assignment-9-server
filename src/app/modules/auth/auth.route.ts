@@ -7,10 +7,14 @@ const router = express.Router();
 
 // create user routes
 router.post(
-  "/",
+  "/register",
   validateRequest(authValidations.createUserValidation),
   authControllers.addUser
 );
-router.post("/", authControllers.login);
+router.post(
+  "/login",
+  validateRequest(authValidations.loginValidation),
+  authControllers.login
+);
 
 export const authRoutes = router;
