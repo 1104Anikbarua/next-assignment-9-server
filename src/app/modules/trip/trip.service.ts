@@ -1,7 +1,7 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { IPayload } from "./trip.interface";
-// create a instance from prisma client
-const prisma = new PrismaClient();
+import { getPaginationInfo } from "../../utlis/paginationInfo.utlis";
+import { prisma } from "../../utlis/prisma.utlis";
 
 // create trip starts here
 const createTrip = async (
@@ -31,24 +31,7 @@ const createTrip = async (
 };
 // create trip ends here
 // console.dir(fieldToSearch, { depth: Infinity });
-const getPaginationInfo = (...info: Array<string | undefined>) => {
-  const [page, limit, sortBy, sortOrder] = info;
 
-  const pages = Number(page) || 1;
-
-  // how many data to take
-  const limits = Number(limit) || 10;
-
-  // how many page to skip
-  const skip = (pages - 1) * limits;
-
-  // how to show the data(by default sortby=budget and sortorder=desc )
-  const orderBy = {
-    [sortBy ? sortBy : "budget"]: sortOrder ? sortOrder : "desc",
-  };
-
-  return { pages, limits, skip, orderBy };
-};
 // get all trip starts here
 const getTrips = async (payload: Partial<IPayload>) => {
   const {
@@ -62,7 +45,7 @@ const getTrips = async (payload: Partial<IPayload>) => {
     maxBudget,
     ...exactFilter
   } = payload;
-  const { pages, skip, limits, orderBy } = getPaginationInfo(
+  const { pages, skip, limits, orderBy } = await getPaginationInfo(
     page,
     limit,
     sortBy,

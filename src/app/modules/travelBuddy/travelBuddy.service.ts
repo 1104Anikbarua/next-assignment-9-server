@@ -1,6 +1,6 @@
-import { PrismaClient, Status } from "@prisma/client";
+import { Status } from "@prisma/client";
+import { prisma } from "../../utlis/prisma.utlis";
 
-const prisma = new PrismaClient();
 // get travel buddies start here
 
 const getTravelBuddies = async (tripId: string) => {

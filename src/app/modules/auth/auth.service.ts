@@ -1,12 +1,11 @@
 import bcrypt from "bcrypt";
 import config from "../../config";
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import jwt, { Secret } from "jsonwebtoken";
 import httpStatus from "http-status";
 import { AppError } from "../../errorHanler/appError.error";
+import { prisma } from "../../utlis/prisma.utlis";
 
-const prisma = new PrismaClient();
-//
 // create user starts here
 const addUser = async (payload: {
   name: string;

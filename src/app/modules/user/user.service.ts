@@ -1,8 +1,12 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../utlis/prisma.utlis";
 
-// create a prisma instance from prismaclient
-const prisma = new PrismaClient();
-
+const selectField = {
+  id: true,
+  name: true,
+  email: true,
+  createdAt: true,
+  updatedAt: true,
+};
 // get user profile by token id starts here
 const getProfile = async (id: string) => {
   // console.log(id);
@@ -11,13 +15,7 @@ const getProfile = async (id: string) => {
     where: {
       id,
     },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      createdAt: true,
-      updatedAt: true,
-    },
+    select: selectField,
   });
   return result;
 };
@@ -38,13 +36,7 @@ const setProfile = async (
       id,
     },
     data: payload,
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      createdAt: true,
-      updatedAt: true,
-    },
+    select: selectField,
   });
   return result;
 };
