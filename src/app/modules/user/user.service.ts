@@ -1,9 +1,54 @@
 import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-const getProfile = async () => {
-  const result = await prisma.userProfile.findUniqueOrThrow();
-};
 
+// create a prisma instance from prismaclient
+const prisma = new PrismaClient();
+
+// get user profile by token id starts here
+const getProfile = async (id: string) => {
+  // console.log(id);
+  // check is user is exists or not
+  const result = await prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+  return result;
+};
+// get user profile by token id ends here
+// update user profile
+const setProfile = async (
+  id: string,
+  payload: { email: string; name: string }
+) => {
+  await prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
+
+  const result = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: payload,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+  return result;
+};
 export const userServices = {
   getProfile,
+  setProfile,
 };
