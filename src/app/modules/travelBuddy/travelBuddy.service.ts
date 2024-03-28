@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Status } from "@prisma/client";
 
 const prisma = new PrismaClient();
 // get travel buddies start here
@@ -13,8 +13,27 @@ const getTravelBuddies = async (tripId: string) => {
   return result;
 };
 // get travel buddies ends here
+
+// respond to travel buddy starts here
+const respondRequest = async (id: string, payload: { status: Status }) => {
+  //   checking is buddy exists or not
+  await prisma.travelBuddy.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
+
+  //   if buddy exists update buddy
+  const result = await prisma.travelBuddy.update({
+    where: { id },
+    data: payload,
+  });
+  return result;
+};
+// respond to travel buddy ends here
 // export travel buddy service functions start here
 export const travelBuddyServices = {
   getTravelBuddies,
+  respondRequest,
 };
 // export travel buddy service functions ends here
