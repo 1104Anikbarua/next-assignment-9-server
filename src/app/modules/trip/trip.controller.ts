@@ -31,7 +31,7 @@ const getTrips = handleAsyncTryCatch(async (req, res) => {
 });
 // get all trips ends here
 const requestBuddy = handleAsyncTryCatch(async (req, res) => {
-  const tripId = req.params.id;
+  const { tripId } = req.params;
   const id = req.body?.userId;
   const result = await tripServices.requestBuddy(id, tripId);
 

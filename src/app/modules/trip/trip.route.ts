@@ -18,7 +18,7 @@ router.get("/trips", tripControllers.getTrips);
 
 // post all trips
 router.post(
-  "/trip/:id/request",
+  "/trip/:tripId/request",
   auth(),
   validateRequest(tripValidations.requestBuddyValidations),
   tripControllers.requestBuddy
