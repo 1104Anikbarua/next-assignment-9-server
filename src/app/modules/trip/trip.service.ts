@@ -122,6 +122,21 @@ const getTrips = async (payload: Partial<IPayload>) => {
   return { meta: { pages, limits, total }, result };
 };
 // get all trip ends here
+// request travel buddy starts here
+const requestBuddy = async (id: string, tripId: string) => {
+  const isBuddyExists = await prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
+  const userId = isBuddyExists.id;
+
+  const result = await prisma.travelBuddy.create({
+    data: { tripId, userId },
+  });
+  return result;
+};
+// request travel buddy ends here
 // export trip services functions starts here
-export const tripServices = { createTrip, getTrips };
+export const tripServices = { createTrip, getTrips, requestBuddy };
 // export trip services functions ends here

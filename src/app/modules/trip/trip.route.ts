@@ -16,4 +16,11 @@ router.post(
 // get all trips
 router.get("/trips", tripControllers.getTrips);
 
+// post all trips
+router.post(
+  "/trip/:id/request",
+  auth(),
+  validateRequest(tripValidations.requestBuddyValidations),
+  tripControllers.requestBuddy
+);
 export const tripRoutes = router;

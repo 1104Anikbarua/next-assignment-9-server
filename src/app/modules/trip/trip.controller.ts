@@ -30,7 +30,23 @@ const getTrips = handleAsyncTryCatch(async (req, res) => {
   });
 });
 // get all trips ends here
+const requestBuddy = handleAsyncTryCatch(async (req, res) => {
+  const tripId = req.params.id;
+  const id = req.body?.userId;
+  const result = await tripServices.requestBuddy(id, tripId);
+
+  handleSendResposne(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Travel buddy request sent successfully",
+    data: result,
+  });
+});
+
+// export all service function starts here
 export const tripControllers = {
   createTrip,
   getTrips,
+  requestBuddy,
 };
+// export all service function ends here

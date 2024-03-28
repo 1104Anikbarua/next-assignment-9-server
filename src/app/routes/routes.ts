@@ -11,11 +11,6 @@ const moduleRoutes = [
     route: authRoutes,
   },
   {
-    // path: "/login",
-    path: "/",
-    route: authRoutes,
-  },
-  {
     path: "/",
     route: tripRoutes,
   },

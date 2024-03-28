@@ -14,7 +14,17 @@ const createTripValidation = z.object({
     ),
   }),
 });
+// create trip validation ends here
+//
 
+const requestBuddyValidations = z.object({
+  body: z.object({
+    userId: z.string({ required_error: "User id is required" }),
+  }),
+});
+
+// export trip validation shcmea
 export const tripValidations = {
   createTripValidation,
+  requestBuddyValidations,
 };
