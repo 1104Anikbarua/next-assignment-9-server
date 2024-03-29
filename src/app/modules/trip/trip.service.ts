@@ -56,12 +56,22 @@ const getTrips = async (payload: Partial<IPayload>) => {
   // partial search
   if (searchTerm) {
     fieldToSearch.push({
-      OR: ["destination"].map((key) => ({
-        [key]: {
-          contains: searchTerm,
-          mode: "insensitive",
-        },
-      })),
+      OR: ["destination", "startDate", "endDate", "budget"].map((key) => {
+        //checking if the key is budget convert string value to number
+        if (key === "budget") {
+          return {
+            [key]: Number(searchTerm),
+          };
+          // else key is not budget
+        } else {
+          return {
+            [key]: {
+              contains: searchTerm,
+              mode: "insensitive",
+            },
+          };
+        }
+      }),
     });
   }
 
