@@ -81,7 +81,7 @@ const getTrips = async (payload: Partial<IPayload>) => {
       AND: Object.keys(exactFilter).map((key) => ({
         [key]: {
           equals:
-            key !== "budget" ? exactFilter[key] : Number(exactFilter[key]),
+            key !== "budget" ? exactFilter[key] : Number(exactFilter[key]) || 0,
         },
       })),
     });
