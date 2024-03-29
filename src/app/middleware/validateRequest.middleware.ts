@@ -5,7 +5,7 @@ import { handleAsyncTryCatch } from "../utlis/tryCatch.utlis";
 export const validateRequest = (schema: AnyZodObject) => {
   return handleAsyncTryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
-      schema.parseAsync({ body: req.body });
+      await schema.parseAsync({ body: req.body });
       next();
     }
   );
