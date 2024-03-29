@@ -3,7 +3,7 @@
 ### **Local Setup**
 
 - Clone the repository.
-- Install the required dependencies using npm install.
+- Install the required dependencies using `npm install`.
 - Create a .env file at the root of the project.
 - In the .env file, set up the following variables
 
@@ -12,7 +12,7 @@
   - **JWT_ACCESS_SECRET:** Assign a secret string to this variable. You can generate a secret string in Node.js using the command `require('crypto').randomBytes(64).toString('hex')`.
   - **JWT_EXPIRES_IN:** Assign the token’s expiration time to this variable (e.g., ‘1d’, ‘1h’, ‘30m’).
 
-  * Run the project using npm run dev.
+  * Run the project using `npm run dev`.
 
 ### **Technology Used in Travel Buddy**
 
