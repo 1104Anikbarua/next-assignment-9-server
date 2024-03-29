@@ -21,7 +21,7 @@ export const handleGlobalError: ErrorRequestHandler = (
     const zodError = handleZodError(error);
     statusCode = zodError.statusCode;
     message = zodError.message;
-    error = { issue: zodError.errorDeails };
+    error = { issue: zodError.errorDetails };
   }
   //if token is incorrect then this if block is going to execute
   if (error instanceof JsonWebTokenError) {
@@ -29,18 +29,26 @@ export const handleGlobalError: ErrorRequestHandler = (
     message = "Unauthorized Access";
   }
   //if token is expired then this if block is going to execute
-  if (error instanceof TokenExpiredError) {
+  else if (error instanceof TokenExpiredError) {
     statusCode = httpStatus.FORBIDDEN;
     message = "Unauthorized Access";
   }
   // if any error happend then this if block is going to execute
-  if (error instanceof AppError) {
+  else if (error instanceof AppError) {
     statusCode = error.statusCode;
     message = error.message;
   }
+  // format error class
+  else if (error instanceof Error) {
+    statusCode = httpStatus.BAD_REQUEST;
+    message = error.message;
+  }
+
+  //send response to the client
   res.status(statusCode).json({
     success: false,
     message,
     errorDetails: error,
+    // stack: error.stack,
   });
 };
