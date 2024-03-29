@@ -54,7 +54,7 @@ const getTrips = (payload) => __awaiter(void 0, void 0, void 0, function* () {
                 //checking if the key is budget convert string value to number
                 if (key === "budget") {
                     return {
-                        [key]: Number(searchTerm),
+                        [key]: Number(searchTerm) || 0,
                     };
                     // else key is not budget
                 }
