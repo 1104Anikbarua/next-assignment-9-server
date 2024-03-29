@@ -1,6 +1,6 @@
 import { prisma } from "../../utlis/prisma.utlis";
 
-const selectField = {
+export const selectField = {
   id: true,
   name: true,
   email: true,

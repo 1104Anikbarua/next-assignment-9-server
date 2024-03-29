@@ -5,6 +5,7 @@ import jwt, { Secret } from "jsonwebtoken";
 import httpStatus from "http-status";
 import { AppError } from "../../errorHanler/appError.error";
 import { prisma } from "../../utlis/prisma.utlis";
+import { selectField } from "../user/user.service";
 
 // create user starts here
 const addUser = async (payload: {
@@ -31,13 +32,7 @@ const addUser = async (payload: {
     //create user
     const createUser = await prismaConstructor.user.create({
       data: userInfo,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: selectField,
     });
     //create profile
     const userProfile = { userId: createUser.id, ...profile };
