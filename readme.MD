@@ -97,11 +97,11 @@
     "status":"APPROVED"
   }```
 
-    - **Approve:** If the user approves the request, the two users become travel buddies and can start planning their trip together.
-    - **Reject:** If the user rejects the request, the sender will be notified that their request has been declined.
-    - **Ignore:** If the user chooses not to respond, the request will remain pending.
-
   ````
+
+  - **Approve:** If the user approves the request, the two users become travel buddies and can start planning their trip together.
+  - **Reject:** If the user rejects the request, the sender will be notified that their request has been declined.
+  - **Ignore:** If the user chooses not to respond, the request will remain pending.
 
 - **Get User Profile:**
 
