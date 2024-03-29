@@ -118,4 +118,4 @@
     }
     ```
 
-### **Live Url Link:** **http://locoalhost:5000/api/v1**
+### **Live Url Link:** **https://next-assignment-8.vercel.app/**
