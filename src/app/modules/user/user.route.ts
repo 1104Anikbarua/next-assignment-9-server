@@ -13,6 +13,6 @@ router.put(
   "/profile",
   auth(),
   validateRequest(userValidations.updateUserValidations),
-  userControllers.setStatus
+  userControllers.setStatus,
 );
 export const userRoutes = router;

@@ -1,5 +1,10 @@
+/* eslint-disable no-unused-vars */
 export class AppError extends Error {
-  constructor(public statusCode: number, message: string, stack: string = "") {
+  constructor(
+    public statusCode: number,
+    message: string,
+    stack: string = "",
+  ) {
     super(message);
 
     if (stack) {

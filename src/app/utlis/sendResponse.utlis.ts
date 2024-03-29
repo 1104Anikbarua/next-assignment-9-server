@@ -3,7 +3,7 @@ import { IResponse } from "../globalTypes/response.types";
 
 export const handleSendResposne = <T, U>(
   res: Response,
-  data: IResponse<T, U>
+  data: IResponse<T, U>,
 ) => {
   res.status(data.statusCode).json({
     success: data.success,

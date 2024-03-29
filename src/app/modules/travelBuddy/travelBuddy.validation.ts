@@ -1,4 +1,3 @@
-import { Status } from "@prisma/client";
 import { z } from "zod";
 import { status } from "./travelBuddy.constant";
 

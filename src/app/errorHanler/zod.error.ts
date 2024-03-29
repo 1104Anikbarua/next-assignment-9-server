@@ -9,7 +9,7 @@ export const handleZodError = (error: ZodError) => {
     ({ path, message }: ZodIssue) => ({
       field: path[path.length - 1],
       message: message,
-    })
+    }),
   );
   return {
     statusCode,

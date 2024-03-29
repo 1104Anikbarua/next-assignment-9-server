@@ -1,0 +1,27 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "no-unused-vars": "error", //give error variabel dec by var
+    "no-undef": "error", //not declare such file but try to use
+    "no-unused-expressions": "warn", //declare/import but never use
+    "no-console": "warn", //give warning for console
+    "prefer-const": "error" //declare variable with const
+  },
+  "globals": {
+    "process": "readonly"
+  }
+}

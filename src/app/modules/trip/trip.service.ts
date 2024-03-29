@@ -13,7 +13,7 @@ const createTrip = async (
     endDate: string;
     budget: number;
     activities: string[];
-  }
+  },
 ) => {
   //   check the user exists or not using decoded id form token
   const isUserExists = await prisma.user.findUniqueOrThrow({
@@ -49,10 +49,10 @@ const getTrips = async (payload: Partial<IPayload>) => {
     page,
     limit,
     sortBy,
-    sortOrder
+    sortOrder,
   );
 
-  let fieldToSearch: Prisma.TripWhereInput[] = [];
+  const fieldToSearch: Prisma.TripWhereInput[] = [];
   // partial search
   if (searchTerm) {
     fieldToSearch.push({

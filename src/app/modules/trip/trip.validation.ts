@@ -10,7 +10,7 @@ const createTripValidation = z.object({
       .number({ required_error: "Budget is required" })
       .positive({ message: "Please provide a positive number" }),
     activities: z.array(
-      z.string({ required_error: "Activitites is required" })
+      z.string({ required_error: "Activitites is required" }),
     ),
   }),
 });

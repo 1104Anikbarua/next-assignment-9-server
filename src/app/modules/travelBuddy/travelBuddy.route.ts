@@ -10,14 +10,14 @@ const router = express.Router();
 router.get(
   "/travel-buddies/:tripId",
   auth(),
-  travelBuddyController.getTravelBuddies
+  travelBuddyController.getTravelBuddies,
 );
 // respond travel buddy starts here
 router.put(
   "/travel-buddies/:buddyId/respond",
   auth(),
   validateRequest(travelBuddyValidations.respondRequest),
-  travelBuddyController.responsdTravelBuddy
+  travelBuddyController.responsdTravelBuddy,
 );
 //get travel buddy ends here
 

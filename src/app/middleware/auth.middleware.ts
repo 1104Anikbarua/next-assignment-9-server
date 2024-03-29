@@ -11,7 +11,7 @@ export const auth = () => {
       const token = req.headers.authorization;
 
       if (!token) {
-        throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized access");
+        throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorized Access");
       }
       let decoded;
       try {
@@ -21,6 +21,6 @@ export const auth = () => {
       }
       req.user = decoded as JwtPayload;
       next();
-    }
+    },
   );
 };

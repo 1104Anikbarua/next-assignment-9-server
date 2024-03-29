@@ -10,7 +10,7 @@ router.post(
   "/trips",
   auth(),
   validateRequest(tripValidations.createTripValidation),
-  tripControllers.createTrip
+  tripControllers.createTrip,
 );
 
 // get all trips
@@ -21,6 +21,6 @@ router.post(
   "/trip/:tripId/request",
   auth(),
   validateRequest(tripValidations.requestBuddyValidations),
-  tripControllers.requestBuddy
+  tripControllers.requestBuddy,
 );
 export const tripRoutes = router;

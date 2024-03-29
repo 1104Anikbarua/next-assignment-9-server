@@ -23,7 +23,7 @@ const getProfile = async (id: string) => {
 // update user profile
 const setProfile = async (
   id: string,
-  payload: { email: string; name: string }
+  payload: { email: string; name: string },
 ) => {
   await prisma.user.findUniqueOrThrow({
     where: {

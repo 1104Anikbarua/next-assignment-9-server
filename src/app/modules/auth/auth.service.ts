@@ -41,7 +41,7 @@ const addUser = async (payload: {
     });
     //create profile
     const userProfile = { userId: createUser.id, ...profile };
-    const createProfile = await prismaConstructor.userProfile.create({
+    await prismaConstructor.userProfile.create({
       data: userProfile,
     });
     return createUser;
@@ -61,13 +61,13 @@ const logIn = async (payload: { email: string; password: string }) => {
   // if exists comparse password
   const isPasswordMatched = await bcrypt.compare(
     password,
-    isUserExists.password
+    isUserExists.password,
   );
   // if password not matched throw custom app error
   if (!isPasswordMatched) {
     throw new AppError(
       httpStatus.FORBIDDEN,
-      "Please check your email and password"
+      "Please check your email and password",
     );
   }
   const { name, id } = isUserExists;
