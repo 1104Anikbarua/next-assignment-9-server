@@ -74,7 +74,7 @@ const getTrips = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         fieldToSearch.push({
             AND: Object.keys(exactFilter).map((key) => ({
                 [key]: {
-                    equals: key !== "budget" ? exactFilter[key] : Number(exactFilter[key]),
+                    equals: key !== "budget" ? exactFilter[key] : Number(exactFilter[key]) || 0,
                 },
             })),
         });
