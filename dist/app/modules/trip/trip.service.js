@@ -46,16 +46,27 @@ const getTrips = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     //  budget,
     page, limit, sortBy, sortOrder, minBudget, maxBudget } = payload, exactFilter = __rest(payload, ["searchTerm", "page", "limit", "sortBy", "sortOrder", "minBudget", "maxBudget"]);
     const { pages, skip, limits, orderBy } = yield (0, paginationInfo_utlis_1.getPaginationInfo)(page, limit, sortBy, sortOrder);
-    let fieldToSearch = [];
+    const fieldToSearch = [];
     // partial search
     if (searchTerm) {
         fieldToSearch.push({
-            OR: ["destination"].map((key) => ({
-                [key]: {
-                    contains: searchTerm,
-                    mode: "insensitive",
-                },
-            })),
+            OR: ["destination", "startDate", "endDate", "budget"].map((key) => {
+                //checking if the key is budget convert string value to number
+                if (key === "budget") {
+                    return {
+                        [key]: Number(searchTerm),
+                    };
+                    // else key is not budget
+                }
+                else {
+                    return {
+                        [key]: {
+                            contains: searchTerm,
+                            mode: "insensitive",
+                        },
+                    };
+                }
+            }),
         });
     }
     // exact filter
@@ -83,8 +94,8 @@ const getTrips = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const searchField = { AND: fieldToSearch };
     const result = yield prisma_utlis_1.prisma.trip.findMany({
         where: searchField,
-        skip: skip,
-        take: limits,
+        skip: skip, //skip page
+        take: limits, //number of data to retrieve
         orderBy: orderBy, //show data in asc/desc based on existing field
     });
     //count total document from database

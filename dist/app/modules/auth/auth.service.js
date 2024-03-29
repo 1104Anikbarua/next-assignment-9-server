@@ -30,6 +30,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const http_status_1 = __importDefault(require("http-status"));
 const appError_error_1 = require("../../errorHanler/appError.error");
 const prisma_utlis_1 = require("../../utlis/prisma.utlis");
+const user_service_1 = require("../user/user.service");
 // create user starts here
 const addUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { profile } = payload, user = __rest(payload, ["profile"]);
@@ -43,17 +44,11 @@ const addUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
         //create user
         const createUser = yield prismaConstructor.user.create({
             data: userInfo,
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                createdAt: true,
-                updatedAt: true,
-            },
+            select: user_service_1.selectField,
         });
         //create profile
         const userProfile = Object.assign({ userId: createUser.id }, profile);
-        const createProfile = yield prismaConstructor.userProfile.create({
+        yield prismaConstructor.userProfile.create({
             data: userProfile,
         });
         return createUser;

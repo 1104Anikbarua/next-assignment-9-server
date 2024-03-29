@@ -17,7 +17,7 @@ const handleGlobalError = (error, req, res, next) => {
         const zodError = (0, zod_error_1.handleZodError)(error);
         statusCode = zodError.statusCode;
         message = zodError.message;
-        error = { issue: zodError.errorDeails };
+        error = { issue: zodError.errorDetails };
     }
     //if token is incorrect then this if block is going to execute
     if (error instanceof jsonwebtoken_1.JsonWebTokenError) {
@@ -25,19 +25,26 @@ const handleGlobalError = (error, req, res, next) => {
         message = "Unauthorized Access";
     }
     //if token is expired then this if block is going to execute
-    if (error instanceof jsonwebtoken_1.TokenExpiredError) {
+    else if (error instanceof jsonwebtoken_1.TokenExpiredError) {
         statusCode = http_status_1.default.FORBIDDEN;
         message = "Unauthorized Access";
     }
     // if any error happend then this if block is going to execute
-    if (error instanceof appError_error_1.AppError) {
+    else if (error instanceof appError_error_1.AppError) {
         statusCode = error.statusCode;
         message = error.message;
     }
+    // format error class
+    else if (error instanceof Error) {
+        statusCode = http_status_1.default.BAD_REQUEST;
+        message = error.message;
+    }
+    //send response to the client
     res.status(statusCode).json({
         success: false,
         message,
         errorDetails: error,
+        // stack: error.stack,
     });
 };
 exports.handleGlobalError = handleGlobalError;

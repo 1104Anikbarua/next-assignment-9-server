@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const index_1 = __importDefault(require("./app/config/index"));
+// eslint-disable-next-line no-unused-vars
 let server;
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     try {

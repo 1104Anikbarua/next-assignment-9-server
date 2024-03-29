@@ -9,9 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userServices = void 0;
+exports.userServices = exports.selectField = void 0;
 const prisma_utlis_1 = require("../../utlis/prisma.utlis");
-const selectField = {
+exports.selectField = {
     id: true,
     name: true,
     email: true,
@@ -26,7 +26,7 @@ const getProfile = (id) => __awaiter(void 0, void 0, void 0, function* () {
         where: {
             id,
         },
-        select: selectField,
+        select: exports.selectField,
     });
     return result;
 });
@@ -43,7 +43,7 @@ const setProfile = (id, payload) => __awaiter(void 0, void 0, void 0, function* 
             id,
         },
         data: payload,
-        select: selectField,
+        select: exports.selectField,
     });
     return result;
 });
