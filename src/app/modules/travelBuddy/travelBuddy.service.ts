@@ -15,7 +15,10 @@ const getTravelBuddies = async (tripId: string) => {
 // get travel buddies ends here
 
 // respond to travel buddy starts here
-const respondRequest = async (id: string, payload: { status: Status }) => {
+const respondRequest = async (
+  id: string,
+  payload: { status: Status; tripId: string },
+) => {
   //   checking is buddy exists or not
   await prisma.travelBuddy.findUniqueOrThrow({
     where: {
