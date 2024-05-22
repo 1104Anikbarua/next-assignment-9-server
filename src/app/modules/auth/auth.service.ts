@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import config from "../../config";
 import { User } from "@prisma/client";
-import jwt, { Secret } from "jsonwebtoken";
+import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import httpStatus from "http-status";
 import { AppError } from "../../errorHanler/appError.error";
 import { prisma } from "../../utlis/prisma.utlis";
@@ -74,6 +74,30 @@ const logIn = async (payload: { email: string; password: string }) => {
 
   return { id, name, email, token };
 };
+
+const changePassword = async (
+  decodedUser: JwtPayload,
+  payload: { currentPassword: string; newPassword: string },
+) => {
+  // destructure currentPassword and new password from payload
+  const { currentPassword, newPassword } = payload;
+  const { id } = decodedUser;
+  const { password } = await prisma.user.findUniqueOrThrow({
+    where: { id }, //if with email we get unique error when try to update user email then we have to set id as unique
+  });
+  // check if password matched
+  const isPasswordMatched = await bcrypt.compare(currentPassword, password);
+  // if password not matched
+  if (!isPasswordMatched) {
+    throw new AppError(
+      httpStatus.UNAUTHORIZED,
+      "Please check your email or password",
+    );
+  }
+  // if password match then hash new password
+  const hashPassword = bcrypt.hash(newPassword, Number(config.salt));
+  console.log(hashPassword);
+};
 // login user ends here
 // ||
 // ||
@@ -81,5 +105,6 @@ const logIn = async (payload: { email: string; password: string }) => {
 export const authServices = {
   addUser,
   logIn,
+  changePassword,
 };
 // export auth service functions ends here

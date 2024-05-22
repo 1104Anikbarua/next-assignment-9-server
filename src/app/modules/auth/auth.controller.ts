@@ -31,9 +31,21 @@ const login = handleAsyncTryCatch(async (req, res) => {
   });
 });
 // login user ends here
+// change password start here
+const changePassword = handleAsyncTryCatch(async (req, res) => {
+  const payload = req.body;
+  const result = await authServices.changePassword(req.user, payload);
+  handleSendResposne(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Password changed successfully",
+    data: result,
+  });
+});
 // export auth controller function starts here
 export const authControllers = {
   addUser,
   login,
+  changePassword,
 };
 // export auth controller function starts here

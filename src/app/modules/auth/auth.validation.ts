@@ -28,7 +28,21 @@ const loginValidation = z.object({
   }),
 });
 // login user validation ends here
+
+// change password start here
+const changePassword = z.object({
+  body: z.object({
+    currentPassword: z.string({
+      required_error: "Current password is required!",
+    }),
+    newPassword: z.string({
+      required_error: "New password is required!",
+    }),
+  }),
+});
+// change password ends here
 export const authValidations = {
   createUserValidation,
   loginValidation,
+  changePassword,
 };
