@@ -101,9 +101,13 @@ const changePassword = async (
     );
   }
   // if password match then hash new password
-  const hashPassword = bcrypt.hash(newPassword, Number(config.salt));
-  console.log(hashPassword);
-  return hashPassword;
+  const hashPassword = await bcrypt.hash(newPassword, Number(config.salt));
+  const result = await prisma.user.update({
+    where: { id },
+    data: { password: hashPassword },
+    select: selectField,
+  });
+  return result;
 };
 // login user ends here
 // ||
