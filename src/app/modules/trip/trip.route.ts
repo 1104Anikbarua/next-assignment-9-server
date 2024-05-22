@@ -5,12 +5,19 @@ import { tripValidations } from "./trip.validation";
 import { auth } from "../../middleware/auth.middleware";
 const router = express.Router();
 
+// // create trip starts here
+// router.post(
+//   "/trips",
+//   auth(),
+//   validateRequest(tripValidations.createTripValidation),
+//   tripControllers.createTrip,
+// );
 // create trip starts here
 router.post(
-  "/trips",
+  "/create-travel",
   auth(),
-  validateRequest(tripValidations.createTripValidation),
-  tripControllers.createTrip,
+  validateRequest(tripValidations.createTravelValidation),
+  tripControllers.createTravel,
 );
 
 // get all trips

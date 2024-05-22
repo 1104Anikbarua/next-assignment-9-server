@@ -4,15 +4,27 @@ import { handleAsyncTryCatch } from "../../utlis/tryCatch.utlis";
 import { tripServices } from "./trip.service";
 import { IPayload } from "./trip.interface";
 
+// // createTrip starts here
+// const createTrip = handleAsyncTryCatch(async (req, res) => {
+//   const { id } = req.user;
+//   const payload = req.body;
+//   const result = await tripServices.createTrip(id, payload);
+//   handleSendResposne(res, {
+//     success: true,
+//     statusCode: httpStatus.CREATED,
+//     message: "Trip created successfully",
+//     data: result,
+//   });
+// });
 // createTrip starts here
-const createTrip = handleAsyncTryCatch(async (req, res) => {
+const createTravel = handleAsyncTryCatch(async (req, res) => {
   const { id } = req.user;
   const payload = req.body;
-  const result = await tripServices.createTrip(id, payload);
+  const result = await tripServices.createTravel(id, payload);
   handleSendResposne(res, {
     success: true,
     statusCode: httpStatus.CREATED,
-    message: "Trip created successfully",
+    message: "Travel created successfully",
     data: result,
   });
 });
@@ -45,7 +57,7 @@ const requestBuddy = handleAsyncTryCatch(async (req, res) => {
 
 // export all service function starts here
 export const tripControllers = {
-  createTrip,
+  createTravel,
   getTrips,
   requestBuddy,
 };

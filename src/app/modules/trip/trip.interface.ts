@@ -12,3 +12,17 @@ export interface IPayload {
   maxBudget: string;
   [key: string]: unknown;
 }
+
+export interface ITravel {
+  userId: string;
+  destination: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  itinerary?: string[];
+  location?: string[];
+  travelType: "adventure" | "business" | "leisure";
+  photos: string[];
+  budget: number;
+  activities: string[];
+}

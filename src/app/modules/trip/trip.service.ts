@@ -1,30 +1,45 @@
 import { Prisma } from "@prisma/client";
-import { IPayload } from "./trip.interface";
+import { IPayload, ITravel } from "./trip.interface";
 import { getPaginationInfo } from "../../utlis/paginationInfo.utlis";
 import { prisma } from "../../utlis/prisma.utlis";
 
-// create trip starts here
-const createTrip = async (
-  id: string,
-  payload: {
-    userId: string;
-    destination: string;
-    startDate: string;
-    endDate: string;
-    budget: number;
-    activities: string[];
-  },
-) => {
-  //   check the user exists or not using decoded id form token
+// // create trip starts here
+// const createTrip = async (
+//   id: string,
+//   payload: {
+//     userId: string;
+//     destination: string;
+//     startDate: string;
+//     endDate: string;
+//     budget: number;
+//     activities: string[];
+//   },
+// ) => {
+//   //   check the user exists or not using decoded id form token
+//   const isUserExists = await prisma.user.findUniqueOrThrow({
+//     where: {
+//       id,
+//     },
+//   });
+//   //   add the userid in trip payload
+//   payload.userId = isUserExists.id;
+
+//   const result = await prisma.trip.create({
+//     data: payload,
+//   });
+//   return result;
+// };
+
+const createTravel = async (id: string, payload: ITravel) => {
+  // check the user exists or not using decoded id form token
   const isUserExists = await prisma.user.findUniqueOrThrow({
     where: {
       id,
     },
   });
-  //   add the userid in trip payload
-  payload.userId = isUserExists.id;
-
-  const result = await prisma.trip.create({
+  // add the userid in trip payload
+  payload.userId = isUserExists?.id;
+  const result = await prisma.travel.create({
     data: payload,
   });
   return result;
@@ -131,5 +146,5 @@ const requestBuddy = async (id: string, tripId: string) => {
 };
 // request travel buddy ends here
 // export trip services functions starts here
-export const tripServices = { createTrip, getTrips, requestBuddy };
+export const tripServices = { createTravel, getTrips, requestBuddy };
 // export trip services functions ends here
