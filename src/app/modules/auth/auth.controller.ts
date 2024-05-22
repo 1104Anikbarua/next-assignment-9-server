@@ -2,6 +2,7 @@ import { authServices } from "./auth.service";
 import httpStatus from "http-status";
 import { handleSendResposne } from "../../utlis/sendResponse.utlis";
 import { handleAsyncTryCatch } from "../../utlis/tryCatch.utlis";
+import config from "../../config";
 
 // create user starts here
 const addUser = handleAsyncTryCatch(async (req, res) => {
@@ -20,14 +21,18 @@ const addUser = handleAsyncTryCatch(async (req, res) => {
 // login user starts here
 const login = handleAsyncTryCatch(async (req, res) => {
   const payload = req.body;
-  const result = await authServices.logIn(payload);
-
+  const { accessToken, refreshToken, ...rest } =
+    await authServices.logIn(payload);
+  res.cookie("refreshToken", refreshToken, {
+    secure: config.node_env === "production",
+    httpOnly: true,
+  });
   //
   handleSendResposne(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: "User logged in successfully",
-    data: result,
+    data: { accessToken, rest },
   });
 });
 // login user ends here

@@ -18,28 +18,29 @@ const addUser = async (payload: {
   };
 }): Promise<Partial<User>> => {
   const { profile, ...user } = payload;
-
+  console.log(profile);
   // generate salt rounds
   const saltRounds = await bcrypt.genSalt(Number(config.salt));
 
   // hash password
   user.password = await bcrypt.hash(user.password, saltRounds);
 
-  // gather userinfo in a single variable
-  const userInfo = { ...user };
-
-  const result = await prisma.$transaction(async (prismaConstructor) => {
-    //create user
-    const createUser = await prismaConstructor.user.create({
-      data: userInfo,
-      select: selectField,
-    });
-    //create profile
-    const userProfile = { userId: createUser.id, ...profile };
-    await prismaConstructor.userProfile.create({
-      data: userProfile,
-    });
-    return createUser;
+  // const result = await prisma.$transaction(async (prismaConstructor) => {
+  //   //create user
+  //   const createUser = await prismaConstructor.user.create({
+  //     data: userInfo,
+  //     select: selectField,
+  //   });
+  //   //create profile
+  //   const userProfile = { userId: createUser.id, ...profile };
+  //   await prismaConstructor.userProfile.create({
+  //     data: userProfile,
+  //   });
+  //   return createUser;
+  // });
+  const result = await prisma.user.create({
+    data: user,
+    select: selectField,
   });
   return result;
 };
@@ -68,11 +69,16 @@ const logIn = async (payload: { email: string; password: string }) => {
   const { name, id } = isUserExists;
   const jwtPayload = { id, name, email };
 
-  const token = jwt.sign(jwtPayload, config.jwt_access_secret as Secret, {
-    expiresIn: config.jwt_expires_in,
+  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as Secret, {
+    expiresIn: config.jwt_access_expires_in,
   });
+  const refreshToken = jwt.sign(
+    jwtPayload,
+    config.jwt_refresh_secret as Secret,
+    { expiresIn: config.jwt_refresh_expires_in },
+  );
 
-  return { id, name, email, token };
+  return { id, name, email, accessToken, refreshToken };
 };
 
 const changePassword = async (
@@ -97,6 +103,7 @@ const changePassword = async (
   // if password match then hash new password
   const hashPassword = bcrypt.hash(newPassword, Number(config.salt));
   console.log(hashPassword);
+  return hashPassword;
 };
 // login user ends here
 // ||

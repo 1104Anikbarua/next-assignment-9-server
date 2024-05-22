@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 //connect to the index routes
-app.use("/api", indexRoutes);
+app.use("/api/v1", indexRoutes);
 
 app.use("/", (req: Request, res: Response) => {
   res.send("Hellow world");

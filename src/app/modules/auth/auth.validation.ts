@@ -9,12 +9,15 @@ const createUserValidation = z.object({
       .email({ message: "Please provide a valid email address" }),
     password: z.string({ required_error: "Password is required!" }),
 
-    profile: z.object({
-      bio: z.string({ required_error: "Bio is required!" }),
-      age: z
-        .number({ required_error: "Age is required!" })
-        .positive({ message: "Pleae provide a positive number" }),
-    }),
+    profile: z
+      .object({
+        bio: z.string({ required_error: "Bio is required!" }).optional(),
+        age: z
+          .number({ required_error: "Age is required!" })
+          .positive({ message: "Pleae provide a positive number" })
+          .optional(),
+      })
+      .optional(),
   }),
 });
 // create user validation ends here

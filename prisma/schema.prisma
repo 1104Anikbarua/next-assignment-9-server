@@ -33,7 +33,7 @@ enum TravelType {
 model User {
   id       String @id @unique @default(uuid())
   name     String
-  email    String //@unique as user can update the email
+  email    String @unique //if user can not update email then remove unique attribute
   password String
 
   createdAt DateTime @default(now())
