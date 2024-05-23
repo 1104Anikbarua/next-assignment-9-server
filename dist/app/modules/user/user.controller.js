@@ -17,7 +17,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const sendResponse_utlis_1 = require("../../utlis/sendResponse.utlis");
 const tryCatch_utlis_1 = require("../../utlis/tryCatch.utlis");
 const user_service_1 = require("./user.service");
-// update user profile starts here
+// get user profile
 const getProfile = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.user;
     const result = yield user_service_1.userServices.getProfile(id);
@@ -28,8 +28,9 @@ const getProfile = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awa
         data: result,
     });
 }));
-// update user profile ends here
-const setStatus = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+// get user profile
+// update user profile starts here
+const setProfile = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.user;
     const payload = req.body;
     const result = yield user_service_1.userServices.setProfile(id, payload);
@@ -40,8 +41,23 @@ const setStatus = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awai
         data: result,
     });
 }));
+// update user profile ends here
+// set status start here
+const setStatus = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const payload = req.body;
+    const result = yield user_service_1.userServices.setStatus(id, payload, req.user);
+    (0, sendResponse_utlis_1.handleSendResposne)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "User status updated successfully",
+        data: result,
+    });
+}));
+// set status ends here
 // export user controller functions starts here
 exports.userControllers = {
     getProfile,
+    setProfile,
     setStatus,
 };

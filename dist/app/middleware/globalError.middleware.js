@@ -17,7 +17,7 @@ const handleGlobalError = (error, req, res, next) => {
         const zodError = (0, zod_error_1.handleZodError)(error);
         statusCode = zodError.statusCode;
         message = zodError.message;
-        error = { issue: zodError.errorDetails };
+        error = { issue: zodError.issues };
     }
     //if token is incorrect then this if block is going to execute
     if (error instanceof jsonwebtoken_1.JsonWebTokenError) {

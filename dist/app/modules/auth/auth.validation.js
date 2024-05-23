@@ -10,12 +10,15 @@ const createUserValidation = zod_1.z.object({
             .string({ required_error: "email is required!" })
             .email({ message: "Please provide a valid email address" }),
         password: zod_1.z.string({ required_error: "Password is required!" }),
-        profile: zod_1.z.object({
-            bio: zod_1.z.string({ required_error: "Bio is required!" }),
+        profile: zod_1.z
+            .object({
+            bio: zod_1.z.string({ required_error: "Bio is required!" }).optional(),
             age: zod_1.z
                 .number({ required_error: "Age is required!" })
-                .positive({ message: "Pleae provide a positive number" }),
-        }),
+                .positive({ message: "Pleae provide a positive number" })
+                .optional(),
+        })
+            .optional(),
     }),
 });
 // create user validation ends here
@@ -29,7 +32,20 @@ const loginValidation = zod_1.z.object({
     }),
 });
 // login user validation ends here
+// change password start here
+const changePassword = zod_1.z.object({
+    body: zod_1.z.object({
+        currentPassword: zod_1.z.string({
+            required_error: "Current password is required!",
+        }),
+        newPassword: zod_1.z.string({
+            required_error: "New password is required!",
+        }),
+    }),
+});
+// change password ends here
 exports.authValidations = {
     createUserValidation,
     loginValidation,
+    changePassword,
 };

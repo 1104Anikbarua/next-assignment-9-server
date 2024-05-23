@@ -4,14 +4,16 @@ exports.handleZodError = void 0;
 const handleZodError = (error) => {
     const statusCode = 400;
     const message = "Validation error";
-    const errorDetails = error.issues.map(({ path, message }) => ({
-        field: path[path.length - 1],
-        message: message,
-    }));
+    const issues = error.issues.map((issue) => {
+        return {
+            field: issue.path[issue.path.length - 1],
+            message: issue.message,
+        };
+    });
     return {
         statusCode,
         message,
-        errorDetails,
+        issues,
     };
 };
 exports.handleZodError = handleZodError;

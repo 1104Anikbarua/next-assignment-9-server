@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
 const index_1 = __importDefault(require("./app/config/index"));
+const db_service_1 = require("./app/db/db.service");
 // eslint-disable-next-line no-unused-vars
 let server;
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -21,6 +22,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         server = app_1.default.listen(index_1.default.port, () => {
             console.log(`Server is running on ${index_1.default.port}`);
         });
+        (0, db_service_1.createSuperAdmin)();
     }
     catch (error) {
         console.log(error);

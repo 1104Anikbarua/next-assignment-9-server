@@ -14,7 +14,7 @@ app.use(express_1.default.json());
 // handle cors origin
 app.use((0, cors_1.default)());
 //connect to the index routes
-app.use("/api", routes_1.indexRoutes);
+app.use("/api/v1", routes_1.indexRoutes);
 app.use("/", (req, res) => {
     res.send("Hellow world");
 });

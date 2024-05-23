@@ -8,17 +8,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __rest = (this && this.__rest) || function (s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
-        }
-    return t;
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -26,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.authServices = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const config_1 = __importDefault(require("../../config"));
+const client_1 = require("@prisma/client");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const http_status_1 = __importDefault(require("http-status"));
 const appError_error_1 = require("../../errorHanler/appError.error");
@@ -33,26 +23,30 @@ const prisma_utlis_1 = require("../../utlis/prisma.utlis");
 const user_service_1 = require("../user/user.service");
 // create user starts here
 const addUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const { profile } = payload, user = __rest(payload, ["profile"]);
+    // const { profile, ...user } = payload;
+    // console.log(profile);
+    payload.role = client_1.UserRole.BUDDY;
     // generate salt rounds
     const saltRounds = yield bcrypt_1.default.genSalt(Number(config_1.default.salt));
     // hash password
-    user.password = yield bcrypt_1.default.hash(user.password, saltRounds);
-    // gather userinfo in a single variable
-    const userInfo = Object.assign({}, user);
-    const result = yield prisma_utlis_1.prisma.$transaction((prismaConstructor) => __awaiter(void 0, void 0, void 0, function* () {
-        //create user
-        const createUser = yield prismaConstructor.user.create({
-            data: userInfo,
-            select: user_service_1.selectField,
-        });
-        //create profile
-        const userProfile = Object.assign({ userId: createUser.id }, profile);
-        yield prismaConstructor.userProfile.create({
-            data: userProfile,
-        });
-        return createUser;
-    }));
+    payload.password = yield bcrypt_1.default.hash(payload.password, saltRounds);
+    // const result = await prisma.$transaction(async (prismaConstructor) => {
+    //   //create user
+    //   const createUser = await prismaConstructor.user.create({
+    //     data: userInfo,
+    //     select: selectField,
+    //   });
+    //   //create profile
+    //   const userProfile = { userId: createUser.id, ...profile };
+    //   await prismaConstructor.userProfile.create({
+    //     data: userProfile,
+    //   });
+    //   return createUser;
+    // });
+    const result = yield prisma_utlis_1.prisma.user.create({
+        data: payload,
+        select: user_service_1.selectField,
+    });
     return result;
 });
 // create user ends here
@@ -69,19 +63,60 @@ const logIn = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     if (!isPasswordMatched) {
         throw new appError_error_1.AppError(http_status_1.default.FORBIDDEN, "Please check your email and password");
     }
-    const { name, id } = isUserExists;
-    const jwtPayload = { id, name, email };
-    const token = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.jwt_access_secret, {
-        expiresIn: config_1.default.jwt_expires_in,
+    const { name, id, role } = isUserExists;
+    const jwtPayload = { id, name, email, role };
+    const accessToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.jwt_access_secret, {
+        expiresIn: config_1.default.jwt_access_expires_in,
     });
-    return { id, name, email, token };
+    const refreshToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.jwt_refresh_secret, { expiresIn: config_1.default.jwt_refresh_expires_in });
+    return { id, name, email, accessToken, refreshToken };
 });
 // login user ends here
+// change password start here
+const changePassword = (decodedUser, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    // destructure currentPassword and new password from payload
+    const { currentPassword, newPassword } = payload;
+    const { id } = decodedUser;
+    const { password } = yield prisma_utlis_1.prisma.user.findUniqueOrThrow({
+        where: { id }, //if with email we get unique error when try to update user email then we have to set id as unique
+    });
+    // check if password matched
+    const isPasswordMatched = yield bcrypt_1.default.compare(currentPassword, password);
+    // if password not matched
+    if (!isPasswordMatched) {
+        throw new appError_error_1.AppError(http_status_1.default.UNAUTHORIZED, "Please check your email or password");
+    }
+    // if password match then hash new password
+    const hashPassword = yield bcrypt_1.default.hash(newPassword, Number(config_1.default.salt));
+    const result = yield prisma_utlis_1.prisma.user.update({
+        where: { id },
+        data: { password: hashPassword },
+        select: user_service_1.selectField,
+    });
+    return result;
+});
+// change password ends here
+// View and Manage User Accounts: Activate/deactivate accounts, edit roles.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createAdmin = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    payload.role = client_1.UserRole.ADMIN;
+    // generate salt
+    const saltRounds = yield bcrypt_1.default.genSalt(Number(config_1.default.salt));
+    // hash password
+    payload.password = yield bcrypt_1.default.hash(payload.password, saltRounds);
+    const result = yield prisma_utlis_1.prisma.user.create({
+        data: payload,
+        select: user_service_1.selectField,
+    });
+    return result;
+});
 // ||
 // ||
 // export auth service functions starts here
 exports.authServices = {
     addUser,
     logIn,
+    changePassword,
+    createAdmin,
 };
 // export auth service functions ends here

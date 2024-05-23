@@ -12,19 +12,19 @@ const user_route_1 = require("../modules/user/user.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
-        path: "/",
+        path: "/auth",
         route: auth_route_1.authRoutes,
     },
     {
-        path: "/",
+        path: "/trips",
         route: trip_route_1.tripRoutes,
     },
     {
-        path: "/",
+        path: "/travelbuddy",
         route: travelBuddy_route_1.travelBuddyRoutes,
     },
     {
-        path: "/",
+        path: "/user",
         route: user_route_1.userRoutes,
     },
 ];

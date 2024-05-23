@@ -18,7 +18,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const tryCatch_utlis_1 = require("../utlis/tryCatch.utlis");
 const appError_error_1 = require("../errorHanler/appError.error");
 const config_1 = __importDefault(require("../config"));
-const auth = () => {
+const auth = (...roles) => {
     return (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         const token = req.headers.authorization;
         if (!token) {
@@ -32,6 +32,10 @@ const auth = () => {
             next(error);
         }
         req.user = decoded;
+        const { role } = req.user;
+        if (roles.length && !roles.includes(role)) {
+            throw new appError_error_1.AppError(http_status_1.default.UNAUTHORIZED, "Unauthorize access");
+        }
         next();
     }));
 };

@@ -4,10 +4,11 @@ exports.userValidations = void 0;
 const zod_1 = require("zod");
 const updateUserValidations = zod_1.z.object({
     body: zod_1.z.object({
-        name: zod_1.z.string({ required_error: "Name is required" }),
+        name: zod_1.z.string({ required_error: "Name is required" }).optional(),
         email: zod_1.z
             .string({ required_error: "Email is required" })
-            .email({ message: "Plese provide a valid email address" }),
+            .email({ message: "Plese provide a valid email address" })
+            .optional(),
     }),
 });
 exports.userValidations = {

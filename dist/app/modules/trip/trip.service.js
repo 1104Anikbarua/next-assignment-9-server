@@ -23,25 +23,128 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.tripServices = void 0;
 const paginationInfo_utlis_1 = require("../../utlis/paginationInfo.utlis");
 const prisma_utlis_1 = require("../../utlis/prisma.utlis");
-// create trip starts here
-const createTrip = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    //   check the user exists or not using decoded id form token
+// // create trip starts here
+// const createTrip = async (
+//   id: string,
+//   payload: {
+//     userId: string;
+//     destination: string;
+//     startDate: string;
+//     endDate: string;
+//     budget: number;
+//     activities: string[];
+//   },
+// ) => {
+//   //   check the user exists or not using decoded id form token
+//   const isUserExists = await prisma.user.findUniqueOrThrow({
+//     where: {
+//       id,
+//     },
+//   });
+//   //   add the userid in trip payload
+//   payload.userId = isUserExists.id;
+//   const result = await prisma.trip.create({
+//     data: payload,
+//   });
+//   return result;
+// };
+// create trip ends here
+// create travel start here
+const createTravel = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    // check the user exists or not using decoded id form token
     const isUserExists = yield prisma_utlis_1.prisma.user.findUniqueOrThrow({
         where: {
             id,
         },
     });
-    //   add the userid in trip payload
-    payload.userId = isUserExists.id;
-    const result = yield prisma_utlis_1.prisma.trip.create({
+    // add the userid in trip payload
+    payload.userId = isUserExists === null || isUserExists === void 0 ? void 0 : isUserExists.id;
+    const result = yield prisma_utlis_1.prisma.travel.create({
         data: payload,
     });
     return result;
 });
-// create trip ends here
-// console.dir(fieldToSearch, { depth: Infinity });
+// create travel ends here
 // get all trip starts here
-const getTrips = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+// const getTrips = async (payload: Partial<IPayload>) => {
+//   const {
+//     searchTerm,
+//     //  budget,
+//     page,
+//     limit,
+//     sortBy,
+//     sortOrder,
+//     minBudget,
+//     maxBudget,
+//     ...exactFilter
+//   } = payload;
+//   const { pages, skip, limits, orderBy } = await getPaginationInfo(
+//     page,
+//     limit,
+//     sortBy,
+//     sortOrder,
+//   );
+//   const fieldToSearch: Prisma.TripWhereInput[] = [];
+//   // partial search
+//   if (searchTerm) {
+//     fieldToSearch.push({
+//       OR: ["destination", "startDate", "endDate", "budget"].map((key) => {
+//         //checking if the key is budget convert string value to number
+//         if (key === "budget") {
+//           return {
+//             [key]: Number(searchTerm) || 0,
+//           };
+//           // else key is not budget
+//         } else {
+//           return {
+//             [key]: {
+//               contains: searchTerm,
+//               mode: "insensitive",
+//             },
+//           };
+//         }
+//       }),
+//     });
+//   }
+//   // exact filter
+//   if (Object.keys(exactFilter).length) {
+//     fieldToSearch.push({
+//       AND: Object.keys(exactFilter).map((key) => ({
+//         [key]: {
+//           equals:
+//             key !== "budget" ? exactFilter[key] : Number(exactFilter[key]) || 0,
+//         },
+//       })),
+//     });
+//   }
+//   // filter by budget
+//   if (minBudget && maxBudget) {
+//     fieldToSearch.push({
+//       AND: ["budget"].map((key) => ({
+//         [key]: {
+//           gte: Number(minBudget),
+//           lte: Number(maxBudget),
+//         },
+//       })),
+//     });
+//   }
+//   //
+//   const searchField: Prisma.TripWhereInput = { AND: fieldToSearch };
+//   const result = await prisma.trip.findMany({
+//     where: searchField,
+//     skip: skip, //skip page
+//     take: limits, //number of data to retrieve
+//     orderBy: orderBy, //show data in asc/desc based on existing field
+//   });
+//   //count total document from database
+//   const total = await prisma.trip.count({
+//     where: searchField,
+//   });
+//   return { meta: { pages, limits, total }, result };
+// };
+// get all trip ends here
+// get all travel starts here
+const getTravels = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { searchTerm, 
     //  budget,
     page, limit, sortBy, sortOrder, minBudget, maxBudget } = payload, exactFilter = __rest(payload, ["searchTerm", "page", "limit", "sortBy", "sortOrder", "minBudget", "maxBudget"]);
@@ -49,24 +152,40 @@ const getTrips = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const fieldToSearch = [];
     // partial search
     if (searchTerm) {
+        // convert the searchterm in lowercase
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+        // find travel type exists with in array or not
+        const travelTypeMatch = ["adventure", "leisure", "business"].find((type) => type === lowerCaseSearchTerm);
+        // Partial search conditions for string fields
+        const partialSearchConditions = [
+            "destination",
+            "startDate",
+            "endDate",
+            "description",
+        ].map((key) => ({
+            [key]: {
+                contains: searchTerm,
+                mode: "insensitive",
+            },
+        }));
+        // Add condition for budget if search term can be a number
+        const budgetValue = Number(searchTerm);
+        if (budgetValue) {
+            partialSearchConditions.push({
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                budget: budgetValue,
+            });
+        }
+        // Add condition for travelType if it matches
+        if (travelTypeMatch) {
+            partialSearchConditions.push({
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                travelType: travelTypeMatch,
+            });
+        }
+        // partial search by or operator
         fieldToSearch.push({
-            OR: ["destination", "startDate", "endDate", "budget"].map((key) => {
-                //checking if the key is budget convert string value to number
-                if (key === "budget") {
-                    return {
-                        [key]: Number(searchTerm) || 0,
-                    };
-                    // else key is not budget
-                }
-                else {
-                    return {
-                        [key]: {
-                            contains: searchTerm,
-                            mode: "insensitive",
-                        },
-                    };
-                }
-            }),
+            OR: partialSearchConditions,
         });
     }
     // exact filter
@@ -90,35 +209,94 @@ const getTrips = (payload) => __awaiter(void 0, void 0, void 0, function* () {
             })),
         });
     }
-    //
+    // condition to filter
     const searchField = { AND: fieldToSearch };
-    const result = yield prisma_utlis_1.prisma.trip.findMany({
+    const result = yield prisma_utlis_1.prisma.travel.findMany({
         where: searchField,
         skip: skip, //skip page
         take: limits, //number of data to retrieve
         orderBy: orderBy, //show data in asc/desc based on existing field
     });
     //count total document from database
-    const total = yield prisma_utlis_1.prisma.trip.count({
+    const total = yield prisma_utlis_1.prisma.travel.count({
         where: searchField,
     });
     return { meta: { pages, limits, total }, result };
 });
-// get all trip ends here
+// get all travel ends here
+// **List of trips the user has posted.
+// get travel by user id start here
+const getTravel = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    // get user id from token
+    const { id: userId } = user;
+    // check is user exists or not
+    yield prisma_utlis_1.prisma.user.findUniqueOrThrow({ where: { id: userId } });
+    // search in the travel model by user id
+    const result = yield prisma_utlis_1.prisma.travel.findMany({
+        where: { userId },
+    });
+    return result;
+});
 // request travel buddy starts here
-const requestBuddy = (id, tripId) => __awaiter(void 0, void 0, void 0, function* () {
+const requestBuddy = (id, travelId) => __awaiter(void 0, void 0, void 0, function* () {
+    // check is user exists or not
     const isBuddyExists = yield prisma_utlis_1.prisma.user.findUniqueOrThrow({
         where: {
             id,
         },
     });
     const userId = isBuddyExists.id;
+    // create a travel buddy request
     const result = yield prisma_utlis_1.prisma.travelBuddy.create({
-        data: { tripId, userId },
+        data: { userId, travelId },
     });
     return result;
 });
 // request travel buddy ends here
+//List of trips the user has requested to join.
+const getRequestedTravels = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = user;
+    // check user exists or not
+    yield prisma_utlis_1.prisma.user.findUniqueOrThrow({ where: { id } });
+    // retrive requested travel by user id
+    const result = yield prisma_utlis_1.prisma.travelBuddy.findMany({
+        where: { userId: id },
+        include: { travel: true },
+    });
+    return result;
+});
+// admin update travel start here
+const setTravel = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    // check is travel exists or not
+    yield prisma_utlis_1.prisma.travel.findUniqueOrThrow({ where: { id } });
+    // update travel information
+    const result = yield prisma_utlis_1.prisma.travel.update({
+        where: { id },
+        data: payload,
+    });
+    return result;
+});
+// admin remove travel start here
+const removeTravel = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    // check is travel exists or not
+    yield prisma_utlis_1.prisma.travel.findUniqueOrThrow({ where: { id } });
+    // update travel information
+    const result = yield prisma_utlis_1.prisma.travel.delete({
+        where: { id },
+    });
+    return result;
+});
+// admin update travel ends here
 // export trip services functions starts here
-exports.tripServices = { createTrip, getTrips, requestBuddy };
+exports.tripServices = {
+    // createTrip,
+    // getTrips,
+    createTravel,
+    getTravels,
+    getTravel,
+    requestBuddy,
+    getRequestedTravels,
+    setTravel,
+    removeTravel,
+};
 // export trip services functions ends here
