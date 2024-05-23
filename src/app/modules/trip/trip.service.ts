@@ -249,16 +249,18 @@ const getTravel = async (user: JwtPayload) => {
   return result;
 };
 // request travel buddy starts here
-const requestBuddy = async (id: string, tripId: string) => {
+const requestBuddy = async (id: string, travelId: string) => {
+  // check is user exists or not
   const isBuddyExists = await prisma.user.findUniqueOrThrow({
     where: {
       id,
     },
   });
-  const userId = isBuddyExists.id;
 
+  const userId = isBuddyExists.id;
+  // create a travel buddy request
   const result = await prisma.travelBuddy.create({
-    data: { tripId, userId },
+    data: { userId, travelId },
   });
   return result;
 };

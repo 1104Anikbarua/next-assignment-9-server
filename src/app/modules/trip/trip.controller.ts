@@ -94,11 +94,12 @@ const getTravel = handleAsyncTryCatch(async (req, res) => {
   });
 });
 // get travel by user id ends here
-
+// request a buddy for a trip
+// can do one user can request for one time now one user can request multiple time
 const requestBuddy = handleAsyncTryCatch(async (req, res) => {
-  const { tripId } = req.params;
+  const { travelId } = req.params;
   const id = req.body?.userId;
-  const result = await tripServices.requestBuddy(id, tripId);
+  const result = await tripServices.requestBuddy(id, travelId);
 
   handleSendResposne(res, {
     success: true,
@@ -107,7 +108,7 @@ const requestBuddy = handleAsyncTryCatch(async (req, res) => {
     data: result,
   });
 });
-
+// request a buddy for a travel
 // export all service function starts here
 export const tripControllers = {
   // createTrip

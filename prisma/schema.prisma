@@ -73,14 +73,16 @@ model Trip {
 // model travel buddy starts here 
 model TravelBuddy {
   id        String   @id @default(uuid())
-  tripId    String
+  tripId    String?
   userId    String
+  travelId  String
   status    Status   @default(PENDING)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation(fields: [userId], references: [id])
-  trip Trip @relation(fields: [tripId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+  Trip   Trip?  @relation(fields: [tripId], references: [id])
+  travel Travel @relation(fields: [travelId], references: [id])
 
   @@map("travelBuddies")
 }
@@ -105,7 +107,7 @@ model UserProfile {
 // new model start here
 // model travel start here 
 model Travel {
-  id          String     @id @default(uuid())
+  id          String        @id @default(uuid())
   userId      String
   destination String
   description String
@@ -116,10 +118,11 @@ model Travel {
   location    String[]
   photos      String[]
   activities  String[]
-  travelType  TravelType @default(adventure)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  user        User       @relation(fields: [userId], references: [id])
+  travelType  TravelType    @default(adventure)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  user        User          @relation(fields: [userId], references: [id])
+  TravelBuddy TravelBuddy[]
 
   @@map("travels")
 }

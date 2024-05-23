@@ -28,9 +28,17 @@ router.get("/", tripControllers.getTravels);
 
 // get singl travel
 router.get("/single-travel", auth(), tripControllers.getTravel);
+// // post a trips request
+// router.post(
+//   "/trip/:tripId/request",
+//   auth(),
+//   validateRequest(tripValidations.requestBuddyValidations),
+//   tripControllers.requestBuddy,
+// );
 // post all trips
+//post a travel request
 router.post(
-  "/trip/:tripId/request",
+  "/travel/:travelId/request",
   auth(),
   validateRequest(tripValidations.requestBuddyValidations),
   tripControllers.requestBuddy,
