@@ -69,8 +69,8 @@ const logIn = async (payload: { email: string; password: string }) => {
       "Please check your email and password",
     );
   }
-  const { name, id } = isUserExists;
-  const jwtPayload = { id, name, email };
+  const { name, id, role } = isUserExists;
+  const jwtPayload = { id, name, email, role };
 
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as Secret, {
     expiresIn: config.jwt_access_expires_in,

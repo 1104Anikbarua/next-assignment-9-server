@@ -12,10 +12,9 @@ const superAdmin = {
 export const createSuperAdmin = async () => {
   //hash the plain text password
   try {
-    const hashPassword = await bcrypt.hash(
-      superAdmin.password,
-      config.salt as string,
-    );
+    // generate salt
+    const saltRounds = await bcrypt.genSalt(Number(config.salt));
+    const hashPassword = await bcrypt.hash(superAdmin.password, saltRounds);
     //   find already super admin exists or not
     const isSuperAdminExists = await prisma.user.findUnique({
       where: {

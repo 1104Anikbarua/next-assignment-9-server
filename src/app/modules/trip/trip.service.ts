@@ -279,6 +279,27 @@ const getRequestedTravels = async (user: JwtPayload) => {
   });
   return result;
 };
+// admin update travel start here
+const setTravel = async (id: string, payload: Record<string, unknown>) => {
+  // check is travel exists or not
+  await prisma.travel.findUniqueOrThrow({ where: { id } });
+  // update travel information
+  const result = await prisma.travel.update({
+    where: { id },
+    data: payload,
+  });
+  return result;
+};
+const removeTravel = async (id: string) => {
+  // check is travel exists or not
+  await prisma.travel.findUniqueOrThrow({ where: { id } });
+  // update travel information
+  const result = await prisma.travel.delete({
+    where: { id },
+  });
+  return result;
+};
+// admin update travel ends here
 // export trip services functions starts here
 export const tripServices = {
   // createTrip,
@@ -288,5 +309,7 @@ export const tripServices = {
   getTravel,
   requestBuddy,
   getRequestedTravels,
+  setTravel,
+  removeTravel,
 };
 // export trip services functions ends here

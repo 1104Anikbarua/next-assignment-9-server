@@ -27,8 +27,22 @@ const setProfile = handleAsyncTryCatch(async (req, res) => {
   });
 });
 // update user profile ends here
+// set status start here
+const setStatus = handleAsyncTryCatch(async (req, res) => {
+  const { id } = req.params;
+  const payload = req.body;
+  const result = await userServices.setStatus(id, payload);
+  handleSendResposne(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "User status updated successfully",
+    data: result,
+  });
+});
+// set status ends here
 // export user controller functions starts here
 export const userControllers = {
   getProfile,
   setProfile,
+  setStatus,
 };

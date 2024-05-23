@@ -3,6 +3,7 @@ import { authControllers } from "./auth.controller";
 import { authValidations } from "./auth.validation";
 import { validateRequest } from "../../middleware/validateRequest.middleware";
 import { auth } from "../../middleware/auth.middleware";
+import { UserRole } from "@prisma/client";
 
 const router = express.Router();
 
@@ -28,10 +29,8 @@ router.post(
 // create admin routes
 router.post(
   "/create-admin",
-  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
-  // upload.single("picture"), //upload.single has build in next function
-  // getParseJson(),
-  // validateRequest(userValidations.createUserValidation),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  validateRequest(authValidations.createUserValidation),
   authControllers.createAdmin,
 );
 export const authRoutes = router;

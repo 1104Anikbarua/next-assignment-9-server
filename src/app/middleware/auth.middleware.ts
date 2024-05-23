@@ -4,8 +4,9 @@ import { handleAsyncTryCatch } from "../utlis/tryCatch.utlis";
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "../errorHanler/appError.error";
 import config from "../config";
-
-export const auth = () => {
+import { UserRole } from "@prisma/client";
+export type TUserRole = keyof typeof UserRole;
+export const auth = (...roles: TUserRole[]) => {
   return handleAsyncTryCatch(
     async (req: Request, res: Response, next: NextFunction) => {
       const token = req.headers.authorization;
@@ -20,6 +21,11 @@ export const auth = () => {
         next(error);
       }
       req.user = decoded as JwtPayload;
+
+      const { role } = req.user;
+      if (roles.length && !roles.includes(role)) {
+        throw new AppError(httpStatus.UNAUTHORIZED, "Unauthorize access");
+      }
       next();
     },
   );

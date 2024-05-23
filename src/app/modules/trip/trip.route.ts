@@ -3,6 +3,7 @@ import { validateRequest } from "../../middleware/validateRequest.middleware";
 import { tripControllers } from "./trip.controller";
 import { tripValidations } from "./trip.validation";
 import { auth } from "../../middleware/auth.middleware";
+import { UserRole } from "@prisma/client";
 const router = express.Router();
 
 // // create trip starts here
@@ -43,6 +44,20 @@ router.post(
   validateRequest(tripValidations.requestBuddyValidations),
   tripControllers.requestBuddy,
 );
-// post a trip request
+// post a travel request
 router.get("/travel-request", auth(), tripControllers.getRequestedTravels);
+// update a travel
+router.patch(
+  "/:travelId/set-travel",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  validateRequest(tripValidations.updateTravelValidations),
+  tripControllers.setTravel,
+);
+// delete a travel
+router.delete(
+  "/:travelId/remove-travel",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  tripControllers.removeTravel,
+);
+//
 export const tripRoutes = router;

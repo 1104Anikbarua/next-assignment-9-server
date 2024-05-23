@@ -116,11 +116,38 @@ const getRequestedTravels = handleAsyncTryCatch(async (req, res) => {
 
   handleSendResposne(res, {
     success: true,
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     message: "Requested travel retrieved successfully",
     data: result,
   });
 });
+// get all requested travel
+// set travel start here
+const setTravel = handleAsyncTryCatch(async (req, res) => {
+  const { travelId } = req.params;
+  const paylaod = req.body;
+  const result = await tripServices.setTravel(travelId, paylaod);
+  handleSendResposne(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Travel updated successfully",
+    data: result,
+  });
+});
+// set travel ends here
+
+// remove travel start here
+const removeTravel = handleAsyncTryCatch(async (req, res) => {
+  const { travelId } = req.params;
+  const result = await tripServices.removeTravel(travelId);
+  handleSendResposne(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Travel removed successfully",
+    data: result,
+  });
+});
+// remove travel ends here
 // export all service function starts here
 export const tripControllers = {
   // createTrip
@@ -130,5 +157,7 @@ export const tripControllers = {
   getTravel,
   requestBuddy,
   getRequestedTravels,
+  setTravel,
+  removeTravel,
 };
 // export all service function ends here
