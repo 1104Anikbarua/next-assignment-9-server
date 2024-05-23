@@ -10,9 +10,9 @@ const router = express.Router();
 // get user profile route
 router.get("/profile", auth(), userControllers.getProfile);
 // update user profile route
-router.put(
+router.patch(
   "/set-profile",
-  auth(),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.BUDDY),
   validateRequest(userValidations.updateUserValidations),
   userControllers.setProfile,
 );
