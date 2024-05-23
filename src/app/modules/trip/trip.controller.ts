@@ -69,6 +69,7 @@ const getTravels = handleAsyncTryCatch(async (req, res) => {
     "minBudget",
     "maxBudget",
     "travelType",
+    "description",
   ]);
   const { meta, result } = await tripServices.getTravels(payload);
   handleSendResposne(res, {
@@ -80,6 +81,20 @@ const getTravels = handleAsyncTryCatch(async (req, res) => {
   });
 });
 // get all travels ends here
+// get travel by user id start here
+const getTravel = handleAsyncTryCatch(async (req, res) => {
+  //  extract token value
+  const user = req.user;
+  const result = await tripServices.getTravel(user);
+  handleSendResposne(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Travel retrieved successfully",
+    data: result,
+  });
+});
+// get travel by user id ends here
+
 const requestBuddy = handleAsyncTryCatch(async (req, res) => {
   const { tripId } = req.params;
   const id = req.body?.userId;
@@ -99,6 +114,7 @@ export const tripControllers = {
   // getTrips,
   createTravel,
   getTravels,
+  getTravel,
   requestBuddy,
 };
 // export all service function ends here

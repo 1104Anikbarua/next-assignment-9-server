@@ -2,6 +2,7 @@ import { IPayload, ITravel } from "./trip.interface";
 import { getPaginationInfo } from "../../utlis/paginationInfo.utlis";
 import { prisma } from "../../utlis/prisma.utlis";
 import { Prisma } from "@prisma/client";
+import { JwtPayload } from "jsonwebtoken";
 
 // // create trip starts here
 // const createTrip = async (
@@ -149,26 +150,29 @@ const getTravels = async (payload: Partial<IPayload>) => {
     sortBy,
     sortOrder,
   );
-  console.log({ payload }, { exactFilter });
+
   const fieldToSearch: Prisma.TravelWhereInput[] = [];
 
   // partial search
   if (searchTerm) {
-    //
+    // convert the searchterm in lowercase
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     // find travel type exists with in array or not
     const travelTypeMatch = ["adventure", "leisure", "business"].find(
       (type) => type === lowerCaseSearchTerm,
     );
     // Partial search conditions for string fields
-    const partialSearchConditions = ["destination", "startDate", "endDate"].map(
-      (key) => ({
-        [key]: {
-          contains: searchTerm,
-          mode: "insensitive",
-        },
-      }),
-    );
+    const partialSearchConditions = [
+      "destination",
+      "startDate",
+      "endDate",
+      "description",
+    ].map((key) => ({
+      [key]: {
+        contains: searchTerm,
+        mode: "insensitive",
+      },
+    }));
 
     // Add condition for budget if search term can be a number
     const budgetValue = Number(searchTerm);
@@ -186,7 +190,7 @@ const getTravels = async (payload: Partial<IPayload>) => {
       });
     }
 
-    //
+    // partial search by or operator
     fieldToSearch.push({
       OR: partialSearchConditions,
     });
@@ -217,7 +221,6 @@ const getTravels = async (payload: Partial<IPayload>) => {
 
   // condition to filter
   const searchField: Prisma.TravelWhereInput = { AND: fieldToSearch };
-
   const result = await prisma.travel.findMany({
     where: searchField,
     skip: skip, //skip page
@@ -232,6 +235,19 @@ const getTravels = async (payload: Partial<IPayload>) => {
   return { meta: { pages, limits, total }, result };
 };
 // get all travel ends here
+
+// get travel by user id start here
+const getTravel = async (user: JwtPayload) => {
+  // get user id from token
+  const { id: userId } = user;
+  // check is user exists or not
+  await prisma.user.findUniqueOrThrow({ where: { id: userId } });
+  // search in the travel model by user id
+  const result = await prisma.travel.findMany({
+    where: { userId },
+  });
+  return result;
+};
 // request travel buddy starts here
 const requestBuddy = async (id: string, tripId: string) => {
   const isBuddyExists = await prisma.user.findUniqueOrThrow({
@@ -253,6 +269,7 @@ export const tripServices = {
   // getTrips,
   createTravel,
   getTravels,
+  getTravel,
   requestBuddy,
 };
 // export trip services functions ends here

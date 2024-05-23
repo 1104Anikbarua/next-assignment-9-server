@@ -26,6 +26,8 @@ router.post(
 // get all travel
 router.get("/", tripControllers.getTravels);
 
+// get singl travel
+router.get("/single-travel", auth(), tripControllers.getTravel);
 // post all trips
 router.post(
   "/trip/:tripId/request",
