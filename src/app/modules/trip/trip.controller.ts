@@ -109,6 +109,18 @@ const requestBuddy = handleAsyncTryCatch(async (req, res) => {
   });
 });
 // request a buddy for a travel
+
+// get user all requested travel
+const getRequestedTravels = handleAsyncTryCatch(async (req, res) => {
+  const result = await tripServices.getRequestedTravels(req.user);
+
+  handleSendResposne(res, {
+    success: true,
+    statusCode: httpStatus.CREATED,
+    message: "Requested travel retrieved successfully",
+    data: result,
+  });
+});
 // export all service function starts here
 export const tripControllers = {
   // createTrip
@@ -117,5 +129,6 @@ export const tripControllers = {
   getTravels,
   getTravel,
   requestBuddy,
+  getRequestedTravels,
 };
 // export all service function ends here

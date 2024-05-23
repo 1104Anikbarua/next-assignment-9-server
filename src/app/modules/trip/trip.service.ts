@@ -236,6 +236,7 @@ const getTravels = async (payload: Partial<IPayload>) => {
 };
 // get all travel ends here
 
+// **List of trips the user has posted.
 // get travel by user id start here
 const getTravel = async (user: JwtPayload) => {
   // get user id from token
@@ -265,6 +266,19 @@ const requestBuddy = async (id: string, travelId: string) => {
   return result;
 };
 // request travel buddy ends here
+
+//List of trips the user has requested to join.
+const getRequestedTravels = async (user: JwtPayload) => {
+  const { id } = user;
+  // check user exists or not
+  await prisma.user.findUniqueOrThrow({ where: { id } });
+  // retrive requested travel by user id
+  const result = await prisma.travelBuddy.findMany({
+    where: { userId: id },
+    include: { travel: true },
+  });
+  return result;
+};
 // export trip services functions starts here
 export const tripServices = {
   // createTrip,
@@ -273,5 +287,6 @@ export const tripServices = {
   getTravels,
   getTravel,
   requestBuddy,
+  getRequestedTravels,
 };
 // export trip services functions ends here

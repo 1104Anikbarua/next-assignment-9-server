@@ -43,4 +43,6 @@ router.post(
   validateRequest(tripValidations.requestBuddyValidations),
   tripControllers.requestBuddy,
 );
+// post a trip request
+router.get("/travel-request", auth(), tripControllers.getRequestedTravels);
 export const tripRoutes = router;
