@@ -31,7 +31,7 @@ const setProfile = handleAsyncTryCatch(async (req, res) => {
 const setStatus = handleAsyncTryCatch(async (req, res) => {
   const { id } = req.params;
   const payload = req.body;
-  const result = await userServices.setStatus(id, payload);
+  const result = await userServices.setStatus(id, payload, req.user);
   handleSendResposne(res, {
     statusCode: httpStatus.OK,
     success: true,
