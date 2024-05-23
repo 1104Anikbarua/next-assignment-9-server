@@ -290,6 +290,7 @@ const setTravel = async (id: string, payload: Record<string, unknown>) => {
   });
   return result;
 };
+// admin remove travel start here
 const removeTravel = async (id: string) => {
   // check is travel exists or not
   await prisma.travel.findUniqueOrThrow({ where: { id } });
