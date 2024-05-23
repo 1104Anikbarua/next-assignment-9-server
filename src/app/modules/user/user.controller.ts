@@ -2,8 +2,7 @@ import httpStatus from "http-status";
 import { handleSendResposne } from "../../utlis/sendResponse.utlis";
 import { handleAsyncTryCatch } from "../../utlis/tryCatch.utlis";
 import { userServices } from "./user.service";
-
-// update user profile starts here
+// get user profile
 const getProfile = handleAsyncTryCatch(async (req, res) => {
   const { id } = req.user;
   const result = await userServices.getProfile(id);
@@ -14,9 +13,9 @@ const getProfile = handleAsyncTryCatch(async (req, res) => {
     data: result,
   });
 });
-// update user profile ends here
-
-const setStatus = handleAsyncTryCatch(async (req, res) => {
+// get user profile
+// update user profile starts here
+const setProfile = handleAsyncTryCatch(async (req, res) => {
   const { id } = req.user;
   const payload = req.body;
   const result = await userServices.setProfile(id, payload);
@@ -27,8 +26,9 @@ const setStatus = handleAsyncTryCatch(async (req, res) => {
     data: result,
   });
 });
+// update user profile ends here
 // export user controller functions starts here
 export const userControllers = {
   getProfile,
-  setStatus,
+  setProfile,
 };

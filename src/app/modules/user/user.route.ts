@@ -10,9 +10,9 @@ const router = express.Router();
 router.get("/profile", auth(), userControllers.getProfile);
 // update user profile route
 router.put(
-  "/profile",
+  "/set-profile",
   auth(),
   validateRequest(userValidations.updateUserValidations),
-  userControllers.setStatus,
+  userControllers.setProfile,
 );
 export const userRoutes = router;

@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import config from "../../config";
-import { User } from "@prisma/client";
+import { User, UserRole } from "@prisma/client";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import httpStatus from "http-status";
 import { AppError } from "../../errorHanler/appError.error";
@@ -12,6 +12,7 @@ const addUser = async (payload: {
   name: string;
   email: string;
   password: string;
+  role: UserRole;
   profile: {
     bio: string;
     age: number;
@@ -19,6 +20,8 @@ const addUser = async (payload: {
 }): Promise<Partial<User>> => {
   const { profile, ...user } = payload;
   console.log(profile);
+
+  user.role = UserRole.BUDDY;
   // generate salt rounds
   const saltRounds = await bcrypt.genSalt(Number(config.salt));
 
@@ -80,7 +83,8 @@ const logIn = async (payload: { email: string; password: string }) => {
 
   return { id, name, email, accessToken, refreshToken };
 };
-
+// login user ends here
+// change password start here
 const changePassword = async (
   decodedUser: JwtPayload,
   payload: { currentPassword: string; newPassword: string },
@@ -109,7 +113,28 @@ const changePassword = async (
   });
   return result;
 };
-// login user ends here
+// change password ends here
+
+// View and Manage User Accounts: Activate/deactivate accounts, edit roles.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createAdmin = async (payload: {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+}) => {
+  payload.role = UserRole.ADMIN;
+  // generate salt
+  const saltRounds = await bcrypt.genSalt(Number(config.salt));
+  // hash password
+  payload.password = await bcrypt.hash(payload.password, saltRounds);
+
+  const result = await prisma.user.create({
+    data: payload,
+    select: selectField,
+  });
+  return result;
+};
 // ||
 // ||
 // export auth service functions starts here
@@ -117,5 +142,6 @@ export const authServices = {
   addUser,
   logIn,
   changePassword,
+  createAdmin,
 };
 // export auth service functions ends here

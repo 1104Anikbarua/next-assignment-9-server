@@ -26,22 +26,32 @@ enum TravelType {
   business
 }
 
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  BUDDY
+}
+
+enum UserActiveStatus {
+  ACTIVE
+  BLOCKED
+}
+
 // enum ends here
 
 // <-MODEL STARTS HERE->
 // User model starts here
 model User {
-  id       String @id @unique @default(uuid())
-  name     String
-  email    String @unique //if user can not update email then remove unique attribute
-  password String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id          String           @id @unique @default(uuid())
+  name        String
+  email       String           @unique
+  password    String
+  role        UserRole
+  status      UserActiveStatus @default(ACTIVE)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
   trip        Trip[]
   travelBuddy TravelBuddy[]
-
   UserProfile UserProfile?
   Travel      Travel[]
 
@@ -129,4 +139,5 @@ model Travel {
 
 // model travel ends here 
 
+// View and Manage User Accounts: Activate/deactivate accounts, edit roles.
 // <-MODEL ENDS HERE->

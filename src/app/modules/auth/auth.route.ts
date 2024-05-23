@@ -8,7 +8,7 @@ const router = express.Router();
 
 // create user routes
 router.post(
-  "/register",
+  "/create-user",
   validateRequest(authValidations.createUserValidation),
   authControllers.addUser,
 );
@@ -23,5 +23,15 @@ router.post(
   auth(),
   validateRequest(authValidations.changePassword),
   authControllers.changePassword,
+);
+
+// create admin routes
+router.post(
+  "/create-admin",
+  // auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  // upload.single("picture"), //upload.single has build in next function
+  // getParseJson(),
+  // validateRequest(userValidations.createUserValidation),
+  authControllers.createAdmin,
 );
 export const authRoutes = router;

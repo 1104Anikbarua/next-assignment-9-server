@@ -47,10 +47,24 @@ const changePassword = handleAsyncTryCatch(async (req, res) => {
     data: result,
   });
 });
+// change password ends here
+// create admin start here
+const createAdmin = handleAsyncTryCatch(async (req, res) => {
+  const payload = req.body;
+  const result = await authServices.createAdmin(payload);
+  handleSendResposne(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Admin created successfully",
+    data: result,
+  });
+});
+// create admin ends here
 // export auth controller function starts here
 export const authControllers = {
   addUser,
   login,
   changePassword,
+  createAdmin,
 };
 // export auth controller function starts here

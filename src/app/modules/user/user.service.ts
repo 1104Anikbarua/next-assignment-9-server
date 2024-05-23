@@ -6,6 +6,7 @@ export const selectField = {
   email: true,
   createdAt: true,
   updatedAt: true,
+  role: true,
 };
 // get user profile by token id starts here
 const getProfile = async (id: string) => {
@@ -25,12 +26,13 @@ const setProfile = async (
   id: string,
   payload: { email: string; name: string },
 ) => {
+  // check is user exists or not
   await prisma.user.findUniqueOrThrow({
     where: {
       id,
     },
   });
-
+  // update user profile information
   const result = await prisma.user.update({
     where: {
       id,
@@ -40,6 +42,7 @@ const setProfile = async (
   });
   return result;
 };
+
 export const userServices = {
   getProfile,
   setProfile,
