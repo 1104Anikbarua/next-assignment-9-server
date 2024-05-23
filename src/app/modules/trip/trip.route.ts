@@ -21,7 +21,10 @@ router.post(
 );
 
 // get all trips
-router.get("/trips", tripControllers.getTrips);
+// router.get("/trips", tripControllers.getTrips);
+
+// get all travel
+router.get("/", tripControllers.getTravels);
 
 // post all trips
 router.post(
