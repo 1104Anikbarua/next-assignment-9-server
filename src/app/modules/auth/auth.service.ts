@@ -18,15 +18,15 @@ const addUser = async (payload: {
     age: number;
   };
 }): Promise<Partial<User>> => {
-  const { profile, ...user } = payload;
-  console.log(profile);
+  // const { profile, ...user } = payload;
+  // console.log(profile);
 
-  user.role = UserRole.BUDDY;
+  payload.role = UserRole.BUDDY;
   // generate salt rounds
   const saltRounds = await bcrypt.genSalt(Number(config.salt));
 
   // hash password
-  user.password = await bcrypt.hash(user.password, saltRounds);
+  payload.password = await bcrypt.hash(payload.password, saltRounds);
 
   // const result = await prisma.$transaction(async (prismaConstructor) => {
   //   //create user
@@ -42,7 +42,7 @@ const addUser = async (payload: {
   //   return createUser;
   // });
   const result = await prisma.user.create({
-    data: user,
+    data: payload,
     select: selectField,
   });
   return result;
