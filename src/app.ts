@@ -8,7 +8,12 @@ const app = express();
 //parse json object
 app.use(express.json());
 // handle cors origin
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "https://next-compuer-store.netlify.app"],
+    credentials: true,
+  }),
+);
 
 //connect to the index routes
 app.use("/api/v1", indexRoutes);

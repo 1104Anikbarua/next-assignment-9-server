@@ -21,7 +21,7 @@ export const createSuperAdmin = async () => {
         email: superAdmin.email,
       },
     });
-
+    console.log("INSIDE");
     if (!isSuperAdminExists) {
       await prisma.user.create({
         data: {
