@@ -19,7 +19,7 @@ const addUser = async (payload: {
   };
 }): Promise<Partial<User>> => {
   // const { profile, ...user } = payload;
-  // console.log(profile);
+  console.log(payload);
 
   payload.role = UserRole.BUDDY;
   // generate salt rounds

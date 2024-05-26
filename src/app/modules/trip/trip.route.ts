@@ -25,7 +25,7 @@ router.post(
 // router.get("/trips", tripControllers.getTrips);
 
 // get all travel
-router.get("/", tripControllers.getTravels);
+router.get("/", auth(UserRole.BUDDY), tripControllers.getTravels);
 
 // get singl travel
 router.get("/single-travel", auth(), tripControllers.getTravel);

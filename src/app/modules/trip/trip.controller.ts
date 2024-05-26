@@ -71,6 +71,7 @@ const getTravels = handleAsyncTryCatch(async (req, res) => {
     "travelType",
     "description",
   ]);
+
   const { meta, result } = await tripServices.getTravels(payload);
   handleSendResposne(res, {
     success: true,
