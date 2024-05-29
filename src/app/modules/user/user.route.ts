@@ -8,7 +8,11 @@ import { UserRole } from "@prisma/client";
 const router = express.Router();
 
 // get user profile route
-router.get("/profile", auth(), userControllers.getProfile);
+router.get(
+  "/profile",
+  auth(UserRole.ADMIN, UserRole.BUDDY, UserRole.SUPER_ADMIN),
+  userControllers.getProfile,
+);
 // update user profile route
 router.patch(
   "/set-profile",

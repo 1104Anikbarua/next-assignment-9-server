@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import { handleSendResposne } from "../../utlis/sendResponse.utlis";
 import { handleAsyncTryCatch } from "../../utlis/tryCatch.utlis";
 import { userServices } from "./user.service";
-// get user profile
+// get user profile start here
 const getProfile = handleAsyncTryCatch(async (req, res) => {
   const { id } = req.user;
   const result = await userServices.getProfile(id);
@@ -13,7 +13,7 @@ const getProfile = handleAsyncTryCatch(async (req, res) => {
     data: result,
   });
 });
-// get user profile
+// get user profile end here
 // update user profile starts here
 const setProfile = handleAsyncTryCatch(async (req, res) => {
   const { id } = req.user;

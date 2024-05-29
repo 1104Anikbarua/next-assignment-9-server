@@ -3,6 +3,7 @@ import { getPaginationInfo } from "../../utlis/paginationInfo.utlis";
 import { prisma } from "../../utlis/prisma.utlis";
 import { Prisma } from "@prisma/client";
 import { JwtPayload } from "jsonwebtoken";
+import { selectField } from "../user/user.service";
 
 // // create trip starts here
 // const createTrip = async (
@@ -144,13 +145,13 @@ const getTravels = async (payload: Partial<IPayload>) => {
     maxBudget,
     ...exactFilter
   } = payload;
+
   const { pages, skip, limits, orderBy } = await getPaginationInfo(
     page,
     limit,
     sortBy,
     sortOrder,
   );
-
   const fieldToSearch: Prisma.TravelWhereInput[] = [];
 
   // partial search
@@ -249,6 +250,21 @@ const getTravel = async (user: JwtPayload) => {
   });
   return result;
 };
+// get travel by user id start here
+// get travel by id start here
+const getTravelById = async (id: string) => {
+  // search in the travel model by id
+  const result = await prisma.travel.findUniqueOrThrow({
+    where: { id },
+    include: {
+      user: {
+        select: selectField,
+      },
+    },
+  });
+  return result;
+};
+// get travel by id ends here
 // request travel buddy starts here
 const requestBuddy = async (id: string, travelId: string) => {
   // check is user exists or not
@@ -308,6 +324,7 @@ export const tripServices = {
   createTravel,
   getTravels,
   getTravel,
+  getTravelById,
   requestBuddy,
   getRequestedTravels,
   setTravel,

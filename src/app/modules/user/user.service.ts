@@ -11,10 +11,10 @@ export const selectField = {
   createdAt: true,
   updatedAt: true,
   role: true,
+  status: true,
 };
 // get user profile by token id starts here
 const getProfile = async (id: string) => {
-  // console.log(id);
   // check is user is exists or not
   const result = await prisma.user.findUniqueOrThrow({
     where: {
