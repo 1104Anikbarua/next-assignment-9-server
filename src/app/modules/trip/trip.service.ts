@@ -274,7 +274,7 @@ const requestBuddy = async (id: string, travelId: string) => {
     },
   });
 
-  const userId = isBuddyExists.id;
+  const userId = isBuddyExists?.id;
   // create a travel buddy request
   const result = await prisma.travelBuddy.create({
     data: { userId, travelId },

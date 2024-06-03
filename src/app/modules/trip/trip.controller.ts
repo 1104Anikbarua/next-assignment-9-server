@@ -80,10 +80,9 @@ const getTravels = handleAsyncTryCatch(async (req, res) => {
     meta,
   });
 });
-
-// get travel by user id start here
+// get all travels ends here
+// get travel by  id start here
 const getTravelById = handleAsyncTryCatch(async (req, res) => {
-  //  extract token value
   const { id } = req.params;
 
   const result = await tripServices.getTravelById(id);
@@ -94,9 +93,9 @@ const getTravelById = handleAsyncTryCatch(async (req, res) => {
     data: result,
   });
 });
-// get travel by user id ends here
-// get all travels ends here
-// get travel by user id start here
+// get travel by  ends here
+
+// get all single user posted travel by user id start here
 const getTravel = handleAsyncTryCatch(async (req, res) => {
   //  extract token value
   const user = req.user;
@@ -108,7 +107,7 @@ const getTravel = handleAsyncTryCatch(async (req, res) => {
     data: result,
   });
 });
-// get travel by user id ends here
+// get all single user posted travel by user id ends here
 // request a buddy for a trip
 // can do one user can request for one time now one user can request multiple time
 const requestBuddy = handleAsyncTryCatch(async (req, res) => {

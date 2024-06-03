@@ -2,6 +2,16 @@ import httpStatus from "http-status";
 import { handleSendResposne } from "../../utlis/sendResponse.utlis";
 import { handleAsyncTryCatch } from "../../utlis/tryCatch.utlis";
 import { userServices } from "./user.service";
+//get all users
+const getUsers = handleAsyncTryCatch(async (req, res) => {
+  const result = await userServices.getUsers();
+  handleSendResposne(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User profile retrieved successfully",
+    data: result,
+  });
+});
 // get user profile start here
 const getProfile = handleAsyncTryCatch(async (req, res) => {
   const { id } = req.user;
@@ -45,4 +55,5 @@ export const userControllers = {
   getProfile,
   setProfile,
   setStatus,
+  getUsers,
 };

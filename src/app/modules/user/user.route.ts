@@ -1,3 +1,4 @@
+"use client";
 import express from "express";
 import { userControllers } from "./user.controller";
 import { auth } from "../../middleware/auth.middleware";
@@ -13,6 +14,9 @@ router.get(
   auth(UserRole.ADMIN, UserRole.BUDDY, UserRole.SUPER_ADMIN),
   userControllers.getProfile,
 );
+
+// get all users
+router.get("/", userControllers.getUsers);
 // update user profile route
 router.patch(
   "/set-profile",

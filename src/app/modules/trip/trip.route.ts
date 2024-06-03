@@ -24,18 +24,26 @@ router.post(
 // get all trips
 // router.get("/trips", tripControllers.getTrips);
 
-// get all travel
-router.get("/", auth(UserRole.BUDDY), tripControllers.getTravels);
-
+// get travel request
+router.get(
+  "/travel-request",
+  auth(UserRole.BUDDY, UserRole.ADMIN),
+  tripControllers.getRequestedTravels,
+);
+// get single travel by user id
+router.get("/posted-travels", auth(UserRole.BUDDY), tripControllers.getTravel);
 //get travel by travel id
 router.get(
   "/:id",
   auth(UserRole.BUDDY, UserRole.ADMIN, UserRole.SUPER_ADMIN),
   tripControllers.getTravelById,
 );
-
-// get single travel by user id
-router.get("/single-travel", auth(), tripControllers.getTravel);
+// get all travel
+router.get(
+  "/",
+  auth(UserRole.BUDDY, UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  tripControllers.getTravels,
+);
 // // post a trips request
 // router.post(
 //   "/trip/:tripId/request",
@@ -47,12 +55,11 @@ router.get("/single-travel", auth(), tripControllers.getTravel);
 //post a travel request
 router.post(
   "/travel/:travelId/request",
-  auth(),
+  auth(UserRole.BUDDY),
   validateRequest(tripValidations.requestBuddyValidations),
   tripControllers.requestBuddy,
 );
-// post a travel request
-router.get("/travel-request", auth(), tripControllers.getRequestedTravels);
+
 // update a travel
 router.patch(
   "/:travelId/set-travel",
@@ -63,7 +70,7 @@ router.patch(
 // delete a travel
 router.delete(
   "/:travelId/remove-travel",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.BUDDY),
   tripControllers.removeTravel,
 );
 //

@@ -13,6 +13,13 @@ export const selectField = {
   role: true,
   status: true,
 };
+
+const getUsers = async () => {
+  const result = await prisma.user.findMany({
+    select: selectField,
+  });
+  return result;
+};
 // get user profile by token id starts here
 const getProfile = async (id: string) => {
   // check is user is exists or not
@@ -64,10 +71,30 @@ const setStatus = async (
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: { id },
   });
+  console.log(
+    "role=>",
+    role,
+    "userinfo.role=>",
+    userInfo.role,
+    "payload.role=>",
+    payload.role,
+  );
   // prevent admin to block super admin or create a user super admin
   if (userInfo?.role === UserRole.SUPER_ADMIN) {
     // admin can not create super admin
     if (payload?.role === UserRole.SUPER_ADMIN && role === UserRole.ADMIN) {
+      throw new AppError(
+        httpStatus.NOT_ACCEPTABLE,
+        "Admin can not create super admin",
+      );
+      // admin cannot block super admin
+    } else if (payload?.role === UserRole.ADMIN && role === UserRole.ADMIN) {
+      throw new AppError(
+        httpStatus.NOT_ACCEPTABLE,
+        "Admin can not create super admin",
+      );
+      // admin cannot block super admin
+    } else if (payload?.role === UserRole.BUDDY && role === UserRole.ADMIN) {
       throw new AppError(
         httpStatus.NOT_ACCEPTABLE,
         "Admin can not create super admin",
@@ -122,4 +149,5 @@ export const userServices = {
   getProfile,
   setProfile,
   setStatus,
+  getUsers,
 };
