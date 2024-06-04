@@ -73,7 +73,7 @@ const logIn = async (payload: { email: string; password: string }) => {
   // if password not matched throw custom app error
   if (!isPasswordMatched) {
     throw new AppError(
-      httpStatus.FORBIDDEN,
+      httpStatus.UNAUTHORIZED,
       "Please check your email and password",
     );
   }

@@ -15,7 +15,11 @@ router.get(
 );
 
 // get all users
-router.get("/", userControllers.getUsers);
+router.get(
+  "/",
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  userControllers.getUsers,
+);
 // update user profile route
 router.patch(
   "/set-profile",

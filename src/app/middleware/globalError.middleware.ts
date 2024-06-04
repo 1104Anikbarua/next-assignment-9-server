@@ -6,6 +6,11 @@ import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import { ZodError } from "zod";
 import { handleZodError } from "../errorHanler/zod.error";
 import { AppError } from "../errorHanler/appError.error";
+import {
+  PrismaClientInitializationError,
+  PrismaClientKnownRequestError,
+  PrismaClientValidationError,
+} from "@prisma/client/runtime/library";
 
 export const handleGlobalError: ErrorRequestHandler = (
   error,
@@ -32,6 +37,28 @@ export const handleGlobalError: ErrorRequestHandler = (
   else if (error instanceof TokenExpiredError) {
     statusCode = httpStatus.FORBIDDEN;
     message = "Unauthorized Access";
+  }
+
+  //
+  if (error instanceof PrismaClientInitializationError) {
+    if (error.name === "PrismaClientInitializationError") {
+      const regex = /error: (.*)\n/;
+      const match = error.message.match(regex);
+      message = match ? match![1] : message;
+    }
+  }
+  //
+  else if (error instanceof PrismaClientValidationError) {
+    statusCode = httpStatus.UNAUTHORIZED;
+    message = "Validation error";
+  }
+  //
+  else if (error instanceof PrismaClientKnownRequestError) {
+    //
+    if (error.code === "P2002") {
+      message = "Unique constraint failed";
+      statusCode = httpStatus.CONFLICT;
+    }
   }
   // if any error happend then this if block is going to execute
   else if (error instanceof AppError) {

@@ -15,8 +15,14 @@ export const selectField = {
   profilePhoto: true,
 };
 
-const getUsers = async () => {
+const getUsers = async (user: JwtPayload) => {
+  const { email } = user;
   const result = await prisma.user.findMany({
+    where: {
+      email: {
+        not: email,
+      },
+    },
     select: selectField,
   });
   return result;
@@ -56,6 +62,7 @@ const setProfile = async (
   return result;
 };
 // update user profile
+
 // admin set profile
 const setStatus = async (
   id: string,

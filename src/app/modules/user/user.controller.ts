@@ -4,7 +4,7 @@ import { handleAsyncTryCatch } from "../../utlis/tryCatch.utlis";
 import { userServices } from "./user.service";
 //get all users
 const getUsers = handleAsyncTryCatch(async (req, res) => {
-  const result = await userServices.getUsers();
+  const result = await userServices.getUsers(req.user);
   handleSendResposne(res, {
     success: true,
     statusCode: httpStatus.OK,
