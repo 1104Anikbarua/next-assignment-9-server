@@ -44,8 +44,15 @@ const changePassword = z.object({
   }),
 });
 // change password ends here
+// refresh token route
+const refreshToken = z.object({
+  cookies: z.object({
+    refreshToken: z.string({ required_error: "Refresh token is required!" }),
+  }),
+});
 export const authValidations = {
   createUserValidation,
   loginValidation,
   changePassword,
+  refreshToken,
 };

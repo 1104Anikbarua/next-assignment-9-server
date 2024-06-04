@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import config from "../../config";
-import { User, UserRole } from "@prisma/client";
+import { User, UserActiveStatus, UserRole } from "@prisma/client";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import httpStatus from "http-status";
 import { AppError } from "../../errorHanler/appError.error";
@@ -17,35 +17,43 @@ const addUser = async (payload: {
     bio: string;
     age: number;
   };
-}): Promise<Partial<User>> => {
-  // const { profile, ...user } = payload;
-  console.log(payload);
-
+}): Promise<Partial<User & { accessToken: string; refreshToken: string }>> => {
   payload.role = UserRole.BUDDY;
   // generate salt rounds
-  const saltRounds = await bcrypt.genSalt(Number(config.salt));
+  const saltRounds = await bcrypt.genSalt(Number(config?.salt));
 
   // hash password
-  payload.password = await bcrypt.hash(payload.password, saltRounds);
+  payload.password = await bcrypt.hash(payload?.password, saltRounds);
 
-  // const result = await prisma.$transaction(async (prismaConstructor) => {
-  //   //create user
-  //   const createUser = await prismaConstructor.user.create({
-  //     data: userInfo,
-  //     select: selectField,
-  //   });
-  //   //create profile
-  //   const userProfile = { userId: createUser.id, ...profile };
-  //   await prismaConstructor.userProfile.create({
-  //     data: userProfile,
-  //   });
-  //   return createUser;
-  // });
-  const result = await prisma.user.create({
-    data: payload,
-    select: selectField,
+  const { id, name, email, role, createdAt, profilePhoto, status, updatedAt } =
+    await prisma.user.create({
+      data: payload,
+      select: selectField,
+    });
+  // return result;
+  const jwtPayload = { id, name, email, role };
+
+  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as Secret, {
+    expiresIn: config.jwt_access_expires_in,
   });
-  return result;
+  const refreshToken = jwt.sign(
+    jwtPayload,
+    config.jwt_refresh_secret as Secret,
+    { expiresIn: config.jwt_refresh_expires_in },
+  );
+
+  return {
+    id,
+    name,
+    email,
+    role,
+    createdAt,
+    profilePhoto,
+    status,
+    updatedAt,
+    accessToken,
+    refreshToken,
+  };
 };
 // create user ends here
 
@@ -135,6 +143,34 @@ const createAdmin = async (payload: {
   });
   return result;
 };
+//
+// generate acccess token
+const getAccessToken = async (token: string) => {
+  const decoded = jwt.verify(
+    token,
+    config.jwt_refresh_secret as string,
+  ) as JwtPayload;
+
+  const { email } = decoded;
+  const { status, role } = await prisma.user.findUniqueOrThrow({
+    where: { email },
+  });
+
+  if (status === UserActiveStatus.BLOCKED) {
+    throw new AppError(httpStatus.NOT_FOUND, `User is ${status}`);
+  }
+
+  const jwtPayload = {
+    email,
+    role,
+  };
+
+  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as Secret, {
+    expiresIn: config.jwt_access_expires_in,
+  });
+
+  return accessToken;
+};
 // ||
 // ||
 // export auth service functions starts here
@@ -143,5 +179,6 @@ export const authServices = {
   logIn,
   changePassword,
   createAdmin,
+  getAccessToken,
 };
 // export auth service functions ends here

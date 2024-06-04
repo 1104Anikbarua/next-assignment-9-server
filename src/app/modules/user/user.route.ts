@@ -1,4 +1,3 @@
-"use client";
 import express from "express";
 import { userControllers } from "./user.controller";
 import { auth } from "../../middleware/auth.middleware";
@@ -26,7 +25,7 @@ router.patch(
 );
 router.patch(
   "/:id/set-status",
-  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.BUDDY),
   userControllers.setStatus,
 );
 export const userRoutes = router;

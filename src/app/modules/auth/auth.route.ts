@@ -21,7 +21,7 @@ router.post(
 
 router.post(
   "/change-password",
-  auth(),
+  auth(UserRole.ADMIN, UserRole.BUDDY, UserRole.SUPER_ADMIN),
   validateRequest(authValidations.changePassword),
   authControllers.changePassword,
 );
@@ -32,5 +32,12 @@ router.post(
   auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
   validateRequest(authValidations.createUserValidation),
   authControllers.createAdmin,
+);
+
+// refresh token route
+router.post(
+  "/refresh-token",
+  validateRequest(authValidations.refreshToken),
+  authControllers.getRefreshToken,
 );
 export const authRoutes = router;

@@ -63,7 +63,7 @@ router.post(
 // update a travel
 router.patch(
   "/:travelId/set-travel",
-  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  auth(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.BUDDY),
   validateRequest(tripValidations.updateTravelValidations),
   tripControllers.setTravel,
 );

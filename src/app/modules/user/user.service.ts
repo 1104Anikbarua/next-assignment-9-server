@@ -12,6 +12,7 @@ export const selectField = {
   updatedAt: true,
   role: true,
   status: true,
+  profilePhoto: true,
 };
 
 const getUsers = async () => {
@@ -61,6 +62,8 @@ const setStatus = async (
   payload: {
     role: UserRole;
     status: UserActiveStatus;
+    email: string;
+    name: string;
   },
   user: JwtPayload,
 ) => {
@@ -71,14 +74,7 @@ const setStatus = async (
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: { id },
   });
-  console.log(
-    "role=>",
-    role,
-    "userinfo.role=>",
-    userInfo.role,
-    "payload.role=>",
-    payload.role,
-  );
+
   // prevent admin to block super admin or create a user super admin
   if (userInfo?.role === UserRole.SUPER_ADMIN) {
     // admin can not create super admin
@@ -131,16 +127,9 @@ const setStatus = async (
   // active user or block user edit roles operation
   const result = await prisma.user.update({
     where: { id },
-    data: { role: payload.role, status: payload.status },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      role: true,
-      status: true,
-      createdAt: true,
-      updatedAt: true,
-    },
+    // data: { role: payload.role, status: payload.status },
+    data: payload,
+    select: selectField,
   });
   return result;
 };

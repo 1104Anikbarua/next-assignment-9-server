@@ -8,13 +8,18 @@ import config from "../../config";
 const addUser = handleAsyncTryCatch(async (req, res) => {
   const payload = req.body;
 
-  const result = await authServices.addUser(payload);
+  const { accessToken, refreshToken, ...rest } =
+    await authServices.addUser(payload);
+  res.cookie("refreshToken", refreshToken, {
+    secure: config.node_env === "production",
+    httpOnly: true,
+  });
 
   handleSendResposne(res, {
     statusCode: httpStatus.CREATED,
     success: true,
     message: "User registered successfully",
-    data: result,
+    data: { accessToken, rest },
   });
 });
 // create user ends here
@@ -60,11 +65,26 @@ const createAdmin = handleAsyncTryCatch(async (req, res) => {
   });
 });
 // create admin ends here
+// generate access token using refresh token starts here
+const getRefreshToken = handleAsyncTryCatch(async (req, res) => {
+  const { refreshToken } = req.cookies;
+
+  const result = await authServices.getAccessToken(refreshToken);
+  handleSendResposne(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Access token generated successfully",
+    data: result,
+  });
+});
+// generate access token using refresh token ends here
+
 // export auth controller function starts here
 export const authControllers = {
   addUser,
   login,
   changePassword,
   createAdmin,
+  getRefreshToken,
 };
 // export auth controller function starts here
