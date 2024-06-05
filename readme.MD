@@ -151,6 +151,7 @@
   **User Management:**
 
   - Super admin can create user super admin or admin
+
   - Super Admin can block and unblock user
 
   - Super Admin can change User role
