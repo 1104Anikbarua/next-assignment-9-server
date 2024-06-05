@@ -35,13 +35,13 @@ router.get("/posted-travels", auth(UserRole.BUDDY), tripControllers.getTravel);
 //get travel by travel id
 router.get(
   "/:id",
-  auth(UserRole.BUDDY, UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  // auth(UserRole.BUDDY, UserRole.ADMIN, UserRole.SUPER_ADMIN),
   tripControllers.getTravelById,
 );
 // get all travel
 router.get(
   "/",
-  auth(UserRole.BUDDY, UserRole.ADMIN, UserRole.SUPER_ADMIN),
+  // auth(UserRole.BUDDY, UserRole.ADMIN, UserRole.SUPER_ADMIN),
   tripControllers.getTravels,
 );
 // // post a trips request

@@ -70,7 +70,6 @@ export const handleGlobalError: ErrorRequestHandler = (
     statusCode = httpStatus.BAD_REQUEST;
     message = error.message;
   }
-
   //send response to the client
   res.status(statusCode).json({
     success: false,

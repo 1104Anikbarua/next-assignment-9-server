@@ -87,19 +87,19 @@ const setStatus = async (
     // admin can not create super admin
     if (payload?.role === UserRole.SUPER_ADMIN && role === UserRole.ADMIN) {
       throw new AppError(
-        httpStatus.NOT_ACCEPTABLE,
+        httpStatus.UNAUTHORIZED,
         "Admin can not create super admin",
       );
       // admin cannot block super admin
     } else if (payload?.role === UserRole.ADMIN && role === UserRole.ADMIN) {
       throw new AppError(
-        httpStatus.NOT_ACCEPTABLE,
+        httpStatus.UNAUTHORIZED,
         "Admin can not create super admin",
       );
       // admin cannot block super admin
     } else if (payload?.role === UserRole.BUDDY && role === UserRole.ADMIN) {
       throw new AppError(
-        httpStatus.NOT_ACCEPTABLE,
+        httpStatus.UNAUTHORIZED,
         "Admin can not create super admin",
       );
       // admin cannot block super admin
@@ -108,7 +108,7 @@ const setStatus = async (
       role === UserRole.ADMIN
     ) {
       throw new AppError(
-        httpStatus.NOT_ACCEPTABLE,
+        httpStatus.UNAUTHORIZED,
         "Admin can not blocked super admin",
       );
     }
@@ -117,7 +117,7 @@ const setStatus = async (
   else if (userInfo.role === UserRole.BUDDY) {
     if (payload.role === UserRole.SUPER_ADMIN && role === UserRole.ADMIN) {
       throw new AppError(
-        httpStatus.NOT_ACCEPTABLE,
+        httpStatus.UNAUTHORIZED,
         "Admin can not create super admin",
       );
     }
@@ -126,7 +126,7 @@ const setStatus = async (
   else if (userInfo.role === UserRole.ADMIN) {
     if (payload.role === UserRole.SUPER_ADMIN && role === UserRole.ADMIN) {
       throw new AppError(
-        httpStatus.NOT_ACCEPTABLE,
+        httpStatus.UNAUTHORIZED,
         "Admin can not create super admin",
       );
     }
