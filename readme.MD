@@ -79,6 +79,18 @@
 
   - Upon successful creation, the trip details are stored in our database, and the user can view their trip itinerary, update it, or share it with others.
 
+  - **Edit a trip:**
+
+  - Users can update their posted trip with necessary information.
+
+  - **Delete a trip:**
+
+  - Users can delete their posted trip.
+
+  - **Change Password:**
+
+  - User can change password.
+
 - **Get Paginated and Filtered Trips:**
 
   - Travel Buddy offers a comprehensive search feature that allows users to find their ideal travel destination based on their preferences. Users can search for destinations within their budget and filter the results based on various parameters.
@@ -109,5 +121,40 @@
       "email": "john.doe@example.com"
     }
     ```
+
+- **ADMIN:**
+
+  **TRIPS:**
+
+  - Admin can update trips
+
+  - Admin can delete trips
+
+  **User Management:**
+
+  - Admin can block and unblock user
+
+  - Admin can change User role
+
+  - Admin can update profile
+
+- **SUPERADMIN:**
+
+  **User Management:**
+
+  **TRIPS:**
+
+  - Super Admin dmin can update trips
+
+  - Super Admin dmin can delete trips
+
+  **User Management:**
+
+  - Super admin can create user super admin or admin
+  - Super Admin can block and unblock user
+
+  - Super Admin can change User role
+
+  - Super Admin can update profile
 
 ### **Live Url Link:** **https://next-assignment-9-server.vercel.app/api/v1/**
