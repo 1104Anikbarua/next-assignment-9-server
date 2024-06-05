@@ -12,6 +12,9 @@
   - **JWT_ACCESS_SECRET:** Assign a secret string to this variable. You can generate a secret string in Node.js using the command `require('crypto').randomBytes(64).toString('hex')`.
   - **JWT_EXPIRES_IN:** Assign the token’s expiration time to this variable (e.g., ‘1d’, ‘1h’, ‘30m’).
 
+  - **JWT_REFRESH_SECRET:** Assign a secret string to this variable. You can generate a secret string in Node.js using the command `require('crypto').randomBytes(64).toString('hex')`.
+  - **JWT_REFRESH_EXPIRES_IN:** Assign the token’s expiration time to this variable (e.g., ‘1d’, ‘1h’, ‘30m’).
+
   * Run the project using `npm run dev`.
 
 ### **Technology Used in Travel Buddy**
@@ -35,11 +38,7 @@
   {
     "name": "John Doe",
     "email": "john@example.com",
-    "password": "password",
-    "profile": {
-      "bio": "Passionate about helping people find their lost items.",
-      "age": 30
-    }
+    "password": "password"
   }
   ```
 
@@ -67,10 +66,14 @@
   ```json
   {
     "destination": "Paris, France",
+    "description": "A tourist attraction is a place of interest that tourists visit, typically for its inherent or an exhibited natural or cultural value, historical significance, natural or built beauty, offering leisure and amusement.",
+    "photos": ["photo link"],
+    "travelType": "ADVENTURE",
     "startDate": "2024-06-01",
     "endDate": "2024-06-07",
     "budget": 1500,
-    "activities": ["Eiffel Tower visit", "Louvre Museum tour"]
+    "Location": ["Eiffel Tower visit", "Louvre Museum tour"],
+    "activities": ["shopping", "meuseum"]
   }
   ```
 
@@ -88,20 +91,9 @@
 
   - Travel Buddy allows users to find potential travel buddies for a specific trip. Users can browse through the profiles of other users who are interested in the same destination and send them a Travel Buddy Request.
 
-- **Respond to Travel Buddy Request:**
-
-  - Travel Buddy allows users to respond to Travel Buddy Requests. When a user receives a request, they have the option to:
-
-  ````json
-  {
-    "status":"APPROVED"
-  }```
-
-  ````
-
-  - **Approve:** If the user approves the request, the two users become travel buddies and can start planning their trip together.
+  <!-- - **Approve:** If the user approves the request, the two users become travel buddies and can start planning their trip together.
   - **Reject:** If the user rejects the request, the sender will be notified that their request has been declined.
-  - **Ignore:** If the user chooses not to respond, the request will remain pending.
+  - **Ignore:** If the user chooses not to respond, the request will remain pending. -->
 
 - **Get User Profile:**
 
@@ -118,4 +110,4 @@
     }
     ```
 
-### **Live Url Link:** **https://next-assignment-8.vercel.app/**
+### **Live Url Link:** **https://next-assignment-9-server.vercel.app/api/v1/**
