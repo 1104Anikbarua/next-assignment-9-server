@@ -27,7 +27,7 @@ router.post(
 // get travel request
 router.get(
   "/travel-request",
-  auth(UserRole.BUDDY, UserRole.ADMIN),
+  auth(UserRole.BUDDY, UserRole.ADMIN, UserRole.SUPER_ADMIN),
   tripControllers.getRequestedTravels,
 );
 // get single travel by user id
