@@ -1,4 +1,4 @@
-# **Travel Buddy Matching**
+# **Amigo Backend**
 
 ### **Local Setup**
 
@@ -158,4 +158,6 @@
 
   - Super Admin can update profile
 
-### **Live Url Link:** **https://next-assignment-9-server.vercel.app/api/v1/**
+### **Client side live url link:** \*\*\*\*
+
+### **Server Side Live Url Link:** **https://next-assignment-9-server.vercel.app/api/v1/**
