@@ -9,6 +9,7 @@ const jsonwebtoken_1 = require("jsonwebtoken");
 const zod_1 = require("zod");
 const zod_error_1 = require("../errorHanler/zod.error");
 const appError_error_1 = require("../errorHanler/appError.error");
+const library_1 = require("@prisma/client/runtime/library");
 const handleGlobalError = (error, req, res, next) => {
     let statusCode = 500;
     let message = "Opps! something went wrong";
@@ -28,6 +29,27 @@ const handleGlobalError = (error, req, res, next) => {
     else if (error instanceof jsonwebtoken_1.TokenExpiredError) {
         statusCode = http_status_1.default.FORBIDDEN;
         message = "Unauthorized Access";
+    }
+    //
+    if (error instanceof library_1.PrismaClientInitializationError) {
+        if (error.name === "PrismaClientInitializationError") {
+            const regex = /error: (.*)\n/;
+            const match = error.message.match(regex);
+            message = match ? match[1] : message;
+        }
+    }
+    //
+    else if (error instanceof library_1.PrismaClientValidationError) {
+        statusCode = http_status_1.default.UNAUTHORIZED;
+        message = "Validation error";
+    }
+    //
+    else if (error instanceof library_1.PrismaClientKnownRequestError) {
+        //
+        if (error.code === "P2002") {
+            message = "Unique constraint failed";
+            statusCode = http_status_1.default.CONFLICT;
+        }
     }
     // if any error happend then this if block is going to execute
     else if (error instanceof appError_error_1.AppError) {

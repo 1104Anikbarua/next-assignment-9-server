@@ -92,11 +92,10 @@ const getTravels = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awa
     });
 }));
 // get all travels ends here
-// get travel by user id start here
-const getTravel = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //  extract token value
-    const user = req.user;
-    const result = yield trip_service_1.tripServices.getTravel(user);
+// get travel by  id start here
+const getTravelById = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield trip_service_1.tripServices.getTravelById(id);
     (0, sendResponse_utlis_1.handleSendResposne)(res, {
         success: true,
         statusCode: http_status_1.default.OK,
@@ -104,7 +103,20 @@ const getTravel = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awai
         data: result,
     });
 }));
-// get travel by user id ends here
+// get travel by  ends here
+// get all single user posted travel by user id start here
+const getTravel = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    //  extract token value
+    const user = req.user;
+    const result = yield trip_service_1.tripServices.getTravel(user);
+    (0, sendResponse_utlis_1.handleSendResposne)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "User travel retrieved successfully",
+        data: result,
+    });
+}));
+// get all single user posted travel by user id ends here
 // request a buddy for a trip
 // can do one user can request for one time now one user can request multiple time
 const requestBuddy = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -163,6 +175,7 @@ exports.tripControllers = {
     createTravel,
     getTravels,
     getTravel,
+    getTravelById,
     requestBuddy,
     getRequestedTravels,
     setTravel,

@@ -13,7 +13,7 @@ exports.validateRequest = void 0;
 const tryCatch_utlis_1 = require("../utlis/tryCatch.utlis");
 const validateRequest = (schema) => {
     return (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-        yield schema.parseAsync({ body: req.body });
+        yield schema.parseAsync({ body: req.body, cookies: req.cookies });
         next();
     }));
 };

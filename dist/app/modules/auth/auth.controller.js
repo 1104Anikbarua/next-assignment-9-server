@@ -32,19 +32,23 @@ const config_1 = __importDefault(require("../../config"));
 // create user starts here
 const addUser = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const payload = req.body;
-    const result = yield auth_service_1.authServices.addUser(payload);
+    const _a = yield auth_service_1.authServices.addUser(payload), { accessToken, refreshToken } = _a, rest = __rest(_a, ["accessToken", "refreshToken"]);
+    res.cookie("refreshToken", refreshToken, {
+        secure: config_1.default.node_env === "production",
+        httpOnly: true,
+    });
     (0, sendResponse_utlis_1.handleSendResposne)(res, {
         statusCode: http_status_1.default.CREATED,
         success: true,
         message: "User registered successfully",
-        data: result,
+        data: { accessToken, rest },
     });
 }));
 // create user ends here
 // login user starts here
 const login = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const payload = req.body;
-    const _a = yield auth_service_1.authServices.logIn(payload), { accessToken, refreshToken } = _a, rest = __rest(_a, ["accessToken", "refreshToken"]);
+    const _b = yield auth_service_1.authServices.logIn(payload), { accessToken, refreshToken } = _b, rest = __rest(_b, ["accessToken", "refreshToken"]);
     res.cookie("refreshToken", refreshToken, {
         secure: config_1.default.node_env === "production",
         httpOnly: true,
@@ -82,11 +86,24 @@ const createAdmin = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __aw
     });
 }));
 // create admin ends here
+// generate access token using refresh token starts here
+const getRefreshToken = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { refreshToken } = req.cookies;
+    const result = yield auth_service_1.authServices.getAccessToken(refreshToken);
+    (0, sendResponse_utlis_1.handleSendResposne)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: "Access token generated successfully",
+        data: result,
+    });
+}));
+// generate access token using refresh token ends here
 // export auth controller function starts here
 exports.authControllers = {
     addUser,
     login,
     changePassword,
     createAdmin,
+    getRefreshToken,
 };
 // export auth controller function starts here

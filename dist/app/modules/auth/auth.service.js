@@ -23,31 +23,33 @@ const prisma_utlis_1 = require("../../utlis/prisma.utlis");
 const user_service_1 = require("../user/user.service");
 // create user starts here
 const addUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    // const { profile, ...user } = payload;
-    // console.log(profile);
     payload.role = client_1.UserRole.BUDDY;
     // generate salt rounds
-    const saltRounds = yield bcrypt_1.default.genSalt(Number(config_1.default.salt));
+    const saltRounds = yield bcrypt_1.default.genSalt(Number(config_1.default === null || config_1.default === void 0 ? void 0 : config_1.default.salt));
     // hash password
-    payload.password = yield bcrypt_1.default.hash(payload.password, saltRounds);
-    // const result = await prisma.$transaction(async (prismaConstructor) => {
-    //   //create user
-    //   const createUser = await prismaConstructor.user.create({
-    //     data: userInfo,
-    //     select: selectField,
-    //   });
-    //   //create profile
-    //   const userProfile = { userId: createUser.id, ...profile };
-    //   await prismaConstructor.userProfile.create({
-    //     data: userProfile,
-    //   });
-    //   return createUser;
-    // });
-    const result = yield prisma_utlis_1.prisma.user.create({
+    payload.password = yield bcrypt_1.default.hash(payload === null || payload === void 0 ? void 0 : payload.password, saltRounds);
+    const { id, name, email, role, createdAt, profilePhoto, status, updatedAt } = yield prisma_utlis_1.prisma.user.create({
         data: payload,
         select: user_service_1.selectField,
     });
-    return result;
+    // return result;
+    const jwtPayload = { id, name, email, role };
+    const accessToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.jwt_access_secret, {
+        expiresIn: config_1.default.jwt_access_expires_in,
+    });
+    const refreshToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.jwt_refresh_secret, { expiresIn: config_1.default.jwt_refresh_expires_in });
+    return {
+        id,
+        name,
+        email,
+        role,
+        createdAt,
+        profilePhoto,
+        status,
+        updatedAt,
+        accessToken,
+        refreshToken,
+    };
 });
 // create user ends here
 // login user stars here
@@ -61,7 +63,7 @@ const logIn = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const isPasswordMatched = yield bcrypt_1.default.compare(password, isUserExists.password);
     // if password not matched throw custom app error
     if (!isPasswordMatched) {
-        throw new appError_error_1.AppError(http_status_1.default.FORBIDDEN, "Please check your email and password");
+        throw new appError_error_1.AppError(http_status_1.default.UNAUTHORIZED, "Please check your email and password");
     }
     const { name, id, role } = isUserExists;
     const jwtPayload = { id, name, email, role };
@@ -110,6 +112,26 @@ const createAdmin = (payload) => __awaiter(void 0, void 0, void 0, function* () 
     });
     return result;
 });
+//
+// generate acccess token
+const getAccessToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    const decoded = jsonwebtoken_1.default.verify(token, config_1.default.jwt_refresh_secret);
+    const { email } = decoded;
+    const { status, role } = yield prisma_utlis_1.prisma.user.findUniqueOrThrow({
+        where: { email },
+    });
+    if (status === client_1.UserActiveStatus.BLOCKED) {
+        throw new appError_error_1.AppError(http_status_1.default.NOT_FOUND, `User is ${status}`);
+    }
+    const jwtPayload = {
+        email,
+        role,
+    };
+    const accessToken = jsonwebtoken_1.default.sign(jwtPayload, config_1.default.jwt_access_secret, {
+        expiresIn: config_1.default.jwt_access_expires_in,
+    });
+    return accessToken;
+});
 // ||
 // ||
 // export auth service functions starts here
@@ -118,5 +140,6 @@ exports.authServices = {
     logIn,
     changePassword,
     createAdmin,
+    getAccessToken,
 };
 // export auth service functions ends here

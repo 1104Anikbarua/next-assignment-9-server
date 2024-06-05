@@ -24,10 +24,23 @@ exports.selectField = {
     createdAt: true,
     updatedAt: true,
     role: true,
+    status: true,
+    profilePhoto: true,
 };
+const getUsers = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email } = user;
+    const result = yield prisma_utlis_1.prisma.user.findMany({
+        where: {
+            email: {
+                not: email,
+            },
+        },
+        select: exports.selectField,
+    });
+    return result;
+});
 // get user profile by token id starts here
 const getProfile = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    // console.log(id);
     // check is user is exists or not
     const result = yield prisma_utlis_1.prisma.user.findUniqueOrThrow({
         where: {
@@ -70,39 +83,40 @@ const setStatus = (id, payload, user) => __awaiter(void 0, void 0, void 0, funct
     if ((userInfo === null || userInfo === void 0 ? void 0 : userInfo.role) === client_1.UserRole.SUPER_ADMIN) {
         // admin can not create super admin
         if ((payload === null || payload === void 0 ? void 0 : payload.role) === client_1.UserRole.SUPER_ADMIN && role === client_1.UserRole.ADMIN) {
-            throw new appError_error_1.AppError(http_status_1.default.NOT_ACCEPTABLE, "Admin can not create super admin");
+            throw new appError_error_1.AppError(http_status_1.default.UNAUTHORIZED, "Admin can not create super admin");
+            // admin cannot block super admin
+        }
+        else if ((payload === null || payload === void 0 ? void 0 : payload.role) === client_1.UserRole.ADMIN && role === client_1.UserRole.ADMIN) {
+            throw new appError_error_1.AppError(http_status_1.default.UNAUTHORIZED, "Admin can not create super admin");
+            // admin cannot block super admin
+        }
+        else if ((payload === null || payload === void 0 ? void 0 : payload.role) === client_1.UserRole.BUDDY && role === client_1.UserRole.ADMIN) {
+            throw new appError_error_1.AppError(http_status_1.default.UNAUTHORIZED, "Admin can not create super admin");
             // admin cannot block super admin
         }
         else if ((payload === null || payload === void 0 ? void 0 : payload.status) === client_1.UserActiveStatus.BLOCKED &&
             role === client_1.UserRole.ADMIN) {
-            throw new appError_error_1.AppError(http_status_1.default.NOT_ACCEPTABLE, "Admin can not blocked super admin");
+            throw new appError_error_1.AppError(http_status_1.default.UNAUTHORIZED, "Admin can not blocked super admin");
         }
     }
     // prevent admin to make buddy a superadmin
     else if (userInfo.role === client_1.UserRole.BUDDY) {
         if (payload.role === client_1.UserRole.SUPER_ADMIN && role === client_1.UserRole.ADMIN) {
-            throw new appError_error_1.AppError(http_status_1.default.NOT_ACCEPTABLE, "Admin can not create super admin");
+            throw new appError_error_1.AppError(http_status_1.default.UNAUTHORIZED, "Admin can not create super admin");
         }
     }
     // prevent admin to make a admin superadmin
     else if (userInfo.role === client_1.UserRole.ADMIN) {
         if (payload.role === client_1.UserRole.SUPER_ADMIN && role === client_1.UserRole.ADMIN) {
-            throw new appError_error_1.AppError(http_status_1.default.NOT_ACCEPTABLE, "Admin can not create super admin");
+            throw new appError_error_1.AppError(http_status_1.default.UNAUTHORIZED, "Admin can not create super admin");
         }
     }
     // active user or block user edit roles operation
     const result = yield prisma_utlis_1.prisma.user.update({
         where: { id },
-        data: { role: payload.role, status: payload.status },
-        select: {
-            id: true,
-            email: true,
-            name: true,
-            role: true,
-            status: true,
-            createdAt: true,
-            updatedAt: true,
-        },
+        // data: { role: payload.role, status: payload.status },
+        data: payload,
+        select: exports.selectField,
     });
     return result;
 });
@@ -111,4 +125,5 @@ exports.userServices = {
     getProfile,
     setProfile,
     setStatus,
+    getUsers,
 };

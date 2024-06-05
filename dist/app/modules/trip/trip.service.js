@@ -23,6 +23,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.tripServices = void 0;
 const paginationInfo_utlis_1 = require("../../utlis/paginationInfo.utlis");
 const prisma_utlis_1 = require("../../utlis/prisma.utlis");
+const user_service_1 = require("../user/user.service");
 // // create trip starts here
 // const createTrip = async (
 //   id: string,
@@ -237,6 +238,21 @@ const getTravel = (user) => __awaiter(void 0, void 0, void 0, function* () {
     });
     return result;
 });
+// get travel by user id start here
+// get travel by id start here
+const getTravelById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    // search in the travel model by id
+    const result = yield prisma_utlis_1.prisma.travel.findUniqueOrThrow({
+        where: { id },
+        include: {
+            user: {
+                select: user_service_1.selectField,
+            },
+        },
+    });
+    return result;
+});
+// get travel by id ends here
 // request travel buddy starts here
 const requestBuddy = (id, travelId) => __awaiter(void 0, void 0, void 0, function* () {
     // check is user exists or not
@@ -245,7 +261,7 @@ const requestBuddy = (id, travelId) => __awaiter(void 0, void 0, void 0, functio
             id,
         },
     });
-    const userId = isBuddyExists.id;
+    const userId = isBuddyExists === null || isBuddyExists === void 0 ? void 0 : isBuddyExists.id;
     // create a travel buddy request
     const result = yield prisma_utlis_1.prisma.travelBuddy.create({
         data: { userId, travelId },
@@ -294,6 +310,7 @@ exports.tripServices = {
     createTravel,
     getTravels,
     getTravel,
+    getTravelById,
     requestBuddy,
     getRequestedTravels,
     setTravel,

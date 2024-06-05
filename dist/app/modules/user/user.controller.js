@@ -17,7 +17,17 @@ const http_status_1 = __importDefault(require("http-status"));
 const sendResponse_utlis_1 = require("../../utlis/sendResponse.utlis");
 const tryCatch_utlis_1 = require("../../utlis/tryCatch.utlis");
 const user_service_1 = require("./user.service");
-// get user profile
+//get all users
+const getUsers = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.userServices.getUsers(req.user);
+    (0, sendResponse_utlis_1.handleSendResposne)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "User profile retrieved successfully",
+        data: result,
+    });
+}));
+// get user profile start here
 const getProfile = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.user;
     const result = yield user_service_1.userServices.getProfile(id);
@@ -28,7 +38,7 @@ const getProfile = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awa
         data: result,
     });
 }));
-// get user profile
+// get user profile end here
 // update user profile starts here
 const setProfile = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.user;
@@ -60,4 +70,5 @@ exports.userControllers = {
     getProfile,
     setProfile,
     setStatus,
+    getUsers,
 };
