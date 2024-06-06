@@ -158,6 +158,6 @@
 
   - Super Admin can update profile
 
-### **Client side live url link:** \*\*\*\*
+### **Client side live url link:** **https://next-assignment-9-client.vercel.app/**
 
 ### **Server Side Live Url Link:** **https://next-assignment-9-server.vercel.app/api/v1/**
