@@ -295,6 +295,21 @@ const getRequestedTravels = async (user: JwtPayload) => {
   });
   return result;
 };
+// get popular travel destination
+const getPopularTravels = async () => {
+  const popularTravels = await prisma.travel.findMany({
+    include: { TravelBuddy: true },
+  });
+  const result = popularTravels
+    .map((travel) => ({
+      buddyCount: travel.TravelBuddy.length,
+      ...travel,
+    }))
+    .filter((travel) => travel.buddyCount > 0)
+    .sort((a, b) => b.buddyCount - a.buddyCount)
+    .slice(0, 5);
+  return result;
+};
 // admin update travel start here
 const setTravel = async (id: string, payload: Record<string, unknown>) => {
   // check is travel exists or not
@@ -329,5 +344,6 @@ export const tripServices = {
   getRequestedTravels,
   setTravel,
   removeTravel,
+  getPopularTravels,
 };
 // export trip services functions ends here

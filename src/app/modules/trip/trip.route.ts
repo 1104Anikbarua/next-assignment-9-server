@@ -32,6 +32,8 @@ router.get(
 );
 // get single travel by user id
 router.get("/posted-travels", auth(UserRole.BUDDY), tripControllers.getTravel);
+// get popular travel
+router.get("/popular-travel", tripControllers.getPopularTravels);
 //get travel by travel id
 router.get(
   "/:id",

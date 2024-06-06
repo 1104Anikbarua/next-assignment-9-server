@@ -93,7 +93,17 @@ const getTravelById = handleAsyncTryCatch(async (req, res) => {
     data: result,
   });
 });
-// get travel by  ends here
+// get travel by id ends here
+// get popular travel
+const getPopularTravels = handleAsyncTryCatch(async (req, res) => {
+  const result = await tripServices.getPopularTravels();
+  handleSendResposne(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Popular travel retrieved successfully",
+    data: result,
+  });
+});
 
 // get all single user posted travel by user id start here
 const getTravel = handleAsyncTryCatch(async (req, res) => {
@@ -174,5 +184,6 @@ export const tripControllers = {
   getRequestedTravels,
   setTravel,
   removeTravel,
+  getPopularTravels,
 };
 // export all service function ends here
