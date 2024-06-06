@@ -103,7 +103,17 @@ const getTravelById = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __
         data: result,
     });
 }));
-// get travel by  ends here
+// get travel by id ends here
+// get popular travel
+const getPopularTravels = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield trip_service_1.tripServices.getPopularTravels();
+    (0, sendResponse_utlis_1.handleSendResposne)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: "Popular travel retrieved successfully",
+        data: result,
+    });
+}));
 // get all single user posted travel by user id start here
 const getTravel = (0, tryCatch_utlis_1.handleAsyncTryCatch)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //  extract token value
@@ -180,5 +190,6 @@ exports.tripControllers = {
     getRequestedTravels,
     setTravel,
     removeTravel,
+    getPopularTravels,
 };
 // export all service function ends here

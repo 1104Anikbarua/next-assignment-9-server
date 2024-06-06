@@ -26,6 +26,8 @@ router.post("/create-travel", (0, auth_middleware_1.auth)(), (0, validateRequest
 router.get("/travel-request", (0, auth_middleware_1.auth)(client_1.UserRole.BUDDY, client_1.UserRole.ADMIN, client_1.UserRole.SUPER_ADMIN), trip_controller_1.tripControllers.getRequestedTravels);
 // get single travel by user id
 router.get("/posted-travels", (0, auth_middleware_1.auth)(client_1.UserRole.BUDDY), trip_controller_1.tripControllers.getTravel);
+// get popular travel
+router.get("/popular-travel", trip_controller_1.tripControllers.getPopularTravels);
 //get travel by travel id
 router.get("/:id", 
 // auth(UserRole.BUDDY, UserRole.ADMIN, UserRole.SUPER_ADMIN),

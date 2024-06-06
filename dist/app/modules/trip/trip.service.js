@@ -281,6 +281,18 @@ const getRequestedTravels = (user) => __awaiter(void 0, void 0, void 0, function
     });
     return result;
 });
+// get popular travel destination
+const getPopularTravels = () => __awaiter(void 0, void 0, void 0, function* () {
+    const popularTravels = yield prisma_utlis_1.prisma.travel.findMany({
+        include: { TravelBuddy: true, user: { select: user_service_1.selectField } },
+    });
+    const result = popularTravels
+        .map((travel) => (Object.assign({ buddyCount: travel.TravelBuddy.length }, travel)))
+        .filter((travel) => travel.buddyCount > 0)
+        .sort((a, b) => b.buddyCount - a.buddyCount)
+        .slice(0, 5);
+    return result;
+});
 // admin update travel start here
 const setTravel = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     // check is travel exists or not
@@ -315,5 +327,6 @@ exports.tripServices = {
     getRequestedTravels,
     setTravel,
     removeTravel,
+    getPopularTravels,
 };
 // export trip services functions ends here
