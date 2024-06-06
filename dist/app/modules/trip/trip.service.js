@@ -290,7 +290,7 @@ const getPopularTravels = () => __awaiter(void 0, void 0, void 0, function* () {
         .map((travel) => (Object.assign({ buddyCount: travel.TravelBuddy.length }, travel)))
         .filter((travel) => travel.buddyCount > 0)
         .sort((a, b) => b.buddyCount - a.buddyCount)
-        .slice(0, 5);
+        .slice(0, 4);
     return result;
 });
 // admin update travel start here
