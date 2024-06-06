@@ -298,8 +298,9 @@ const getRequestedTravels = async (user: JwtPayload) => {
 // get popular travel destination
 const getPopularTravels = async () => {
   const popularTravels = await prisma.travel.findMany({
-    include: { TravelBuddy: true },
+    include: { TravelBuddy: true, user: { select: selectField } },
   });
+
   const result = popularTravels
     .map((travel) => ({
       buddyCount: travel.TravelBuddy.length,
