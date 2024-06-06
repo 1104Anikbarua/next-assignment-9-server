@@ -308,7 +308,7 @@ const getPopularTravels = async () => {
     }))
     .filter((travel) => travel.buddyCount > 0)
     .sort((a, b) => b.buddyCount - a.buddyCount)
-    .slice(0, 5);
+    .slice(0, 4);
   return result;
 };
 // admin update travel start here
